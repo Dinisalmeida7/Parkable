@@ -1,5 +1,15 @@
 import { parks } from './parks';
 import {
+  addFavorite,
+  getFavorites,
+  isFavorite,
+  removeFavorite,
+  setFavorites,
+  toggleFavorite,
+} from './favorites';
+import { addRating, getRatings, getRatingsForPark, removeRating, setRatings } from './ratings';
+import { addHistoryEntry, clearHistory, getHistory, setHistory } from './history';
+import {
   NEEDS,
   EQUIPMENT,
   filterByNeeds,
@@ -37,3 +47,20 @@ export const applyParkFilters = ({
 };
 
 export { NEEDS, EQUIPMENT };
+export {
+  addFavorite,
+  getFavorites,
+  isFavorite,
+  removeFavorite,
+  setFavorites,
+  toggleFavorite,
+  addRating,
+  getRatings,
+  getRatingsForPark,
+  removeRating,
+  setRatings,
+  addHistoryEntry,
+  clearHistory,
+  getHistory,
+  setHistory,
+};

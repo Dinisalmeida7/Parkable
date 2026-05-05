@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export const defaultRatings = [
   {
     parkId: 'park-alfama-view',
@@ -36,3 +38,60 @@ export const defaultRatings = [
     comment: 'Bonito, mas dificil para mobilidade.',
   },
 ];
+
+const STORAGE_KEY = '@parkable/ratings';
+
+const safeParse = (value, fallback) => {
+  try {
+    return value ? JSON.parse(value) : fallback;
+  } catch (error) {
+    return fallback;
+  }
+};
+
+const normalizeRating = (rating) => ({
+  id: rating.id || `rating-${Date.now()}-${Math.round(Math.random() * 1000)}`,
+  parkId: rating.parkId,
+  overall: rating.overall ?? 0,
+  mobility: rating.mobility ?? 0,
+  visual: rating.visual ?? 0,
+  auditory: rating.auditory ?? 0,
+  cognitive: rating.cognitive ?? 0,
+  comment: rating.comment || '',
+  createdAt: rating.createdAt || new Date().toISOString(),
+});
+
+export const getRatings = async () => {
+  try {
+    const stored = await AsyncStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return safeParse(stored, [...defaultRatings]);
+    }
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(defaultRatings));
+    return [...defaultRatings];
+  } catch (error) {
+    return [...defaultRatings];
+  }
+};
+
+export const setRatings = async (ratings) => {
+  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ratings));
+  return ratings;
+};
+
+export const getRatingsForPark = async (parkId) => {
+  const ratings = await getRatings();
+  return ratings.filter((rating) => rating.parkId === parkId);
+};
+
+export const addRating = async (rating) => {
+  const ratings = await getRatings();
+  const next = [normalizeRating(rating), ...ratings];
+  return setRatings(next);
+};
+
+export const removeRating = async (ratingId) => {
+  const ratings = await getRatings();
+  const next = ratings.filter((rating) => rating.id !== ratingId);
+  return setRatings(next);
+};
