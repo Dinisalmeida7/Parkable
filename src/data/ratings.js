@@ -1,0 +1,38 @@
+export const defaultRatings = [
+  {
+    parkId: 'park-alfama-view',
+    overall: 3.5,
+    mobility: 3.0,
+    visual: 4.0,
+    auditory: 3.0,
+    cognitive: 4.0,
+    comment: 'Boa vista, mas rampas curtas.',
+  },
+  {
+    parkId: 'park-cidade-porto',
+    overall: 4.6,
+    mobility: 4.8,
+    visual: 4.5,
+    auditory: 4.2,
+    cognitive: 4.7,
+    comment: 'Percursos largos e bem sinalizados.',
+  },
+  {
+    parkId: 'park-parque-nacoes',
+    overall: 4.9,
+    mobility: 5.0,
+    visual: 4.7,
+    auditory: 4.8,
+    cognitive: 4.9,
+    comment: 'Excelente acessibilidade.',
+  },
+  {
+    parkId: 'park-pena',
+    overall: 2.6,
+    mobility: 2.1,
+    visual: 2.3,
+    auditory: 3.4,
+    cognitive: 2.7,
+    comment: 'Bonito, mas dificil para mobilidade.',
+  },
+];

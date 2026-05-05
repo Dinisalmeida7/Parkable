@@ -14,13 +14,39 @@ const translations = {
       profile: 'Perfil',
     },
     screens: {
+      onboarding: {
+        title: 'Bem-vindo ao Parkable',
+        subtitle: 'Escolhe as necessidades para ajustar o mapa.',
+        cta: 'Continuar',
+      },
+      auth: {
+        title: 'Entrar',
+        subtitle: 'Simulacao de login local.',
+        inputLabel: 'Nome',
+        cta: 'Entrar',
+        skip: 'Entrar como convidado',
+      },
+      loading: {
+        title: 'A preparar a app...',
+      },
       map: {
         title: 'Mapa de parques acessiveis',
         subtitle: 'Breve mapa interativo com marcadores e pesquisa.',
+        searchPlaceholder: 'Procurar parques e filtros',
+        quickListTitle: 'Mais acessiveis',
+        openSearch: 'Abrir',
       },
       search: {
         title: 'Pesquisa e filtros',
         subtitle: 'Procura por nome, proximidade e necessidades.',
+        searchPlaceholder: 'Nome do parque',
+        needsTitle: 'Necessidades',
+        equipmentTitle: 'Equipamentos',
+        sortTitle: 'Ordenar por',
+        sortAccessibility: 'Acessibilidade',
+        sortDistance: 'Distancia',
+        resultsCount: '{{count}} resultados',
+        empty: 'Sem resultados para estes filtros.',
       },
       favorites: {
         title: 'Favoritos',
@@ -29,6 +55,7 @@ const translations = {
       profile: {
         title: 'Perfil',
         subtitle: 'Preferencias, necessidades e notificacoes.',
+        signOut: 'Sair da sessao',
       },
       parkDetails: {
         title: 'Ficha do parque',
@@ -47,13 +74,39 @@ const translations = {
       profile: 'Profile',
     },
     screens: {
+      onboarding: {
+        title: 'Welcome to Parkable',
+        subtitle: 'Pick needs to personalize the map.',
+        cta: 'Continue',
+      },
+      auth: {
+        title: 'Sign in',
+        subtitle: 'Local login simulation.',
+        inputLabel: 'Name',
+        cta: 'Sign in',
+        skip: 'Continue as guest',
+      },
+      loading: {
+        title: 'Preparing the app...',
+      },
       map: {
         title: 'Accessible parks map',
         subtitle: 'Interactive map with markers and search.',
+        searchPlaceholder: 'Search parks and filters',
+        quickListTitle: 'Most accessible',
+        openSearch: 'Open',
       },
       search: {
         title: 'Search and filters',
         subtitle: 'Find by name, proximity, and needs.',
+        searchPlaceholder: 'Park name',
+        needsTitle: 'Needs',
+        equipmentTitle: 'Equipment',
+        sortTitle: 'Sort by',
+        sortAccessibility: 'Accessibility',
+        sortDistance: 'Distance',
+        resultsCount: '{{count}} results',
+        empty: 'No results for these filters.',
       },
       favorites: {
         title: 'Favorites',
@@ -62,6 +115,7 @@ const translations = {
       profile: {
         title: 'Profile',
         subtitle: 'Preferences, needs, and notifications.',
+        signOut: 'Sign out',
       },
       parkDetails: {
         title: 'Park details',

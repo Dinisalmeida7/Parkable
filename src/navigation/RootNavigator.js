@@ -7,7 +7,11 @@ import SearchScreen from '../screens/SearchScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ParkDetailsScreen from '../screens/ParkDetailsScreen';
+import AuthScreen from '../screens/AuthScreen';
+import LoadingScreen from '../screens/LoadingScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
 import { useTranslation } from '../i18n';
+import { useSession } from '../session';
 import { useTheme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -53,7 +57,17 @@ function Tabs() {
 }
 
 export function RootNavigator() {
+  const { isBooted, isOnboarded, isAuthenticated } = useSession();
+  const { t } = useTranslation();
   const { colors } = useTheme();
+
+  if (!isBooted) {
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Loading" component={LoadingScreen} />
+      </Stack.Navigator>
+    );
+  }
 
   return (
     <Stack.Navigator
@@ -63,12 +77,28 @@ export function RootNavigator() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-      <Stack.Screen
-        name="ParkDetails"
-        component={ParkDetailsScreen}
-        options={{ title: 'Park' }}
-      />
+      {!isOnboarded ? (
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={{ headerShown: false }}
+        />
+      ) : !isAuthenticated ? (
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          options={{ title: t('screens.auth.title') }}
+        />
+      ) : (
+        <>
+          <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="ParkDetails"
+            component={ParkDetailsScreen}
+            options={{ title: t('screens.parkDetails.title') }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
