@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const defaultRatings = [
   {
+    id: 'rating-alfama-1',
     parkId: 'park-alfama-view',
     overall: 3.5,
     mobility: 3.0,
@@ -11,6 +12,7 @@ export const defaultRatings = [
     comment: 'Boa vista, mas rampas curtas.',
   },
   {
+    id: 'rating-porto-1',
     parkId: 'park-cidade-porto',
     overall: 4.6,
     mobility: 4.8,
@@ -20,6 +22,7 @@ export const defaultRatings = [
     comment: 'Percursos largos e bem sinalizados.',
   },
   {
+    id: 'rating-nacoes-1',
     parkId: 'park-parque-nacoes',
     overall: 4.9,
     mobility: 5.0,
@@ -29,6 +32,7 @@ export const defaultRatings = [
     comment: 'Excelente acessibilidade.',
   },
   {
+    id: 'rating-pena-1',
     parkId: 'park-pena',
     overall: 2.6,
     mobility: 2.1,
