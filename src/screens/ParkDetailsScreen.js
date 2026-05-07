@@ -122,7 +122,7 @@ export default function ParkDetailsScreen() {
     () =>
       EQUIPMENT.map((item) => ({
         key: item.key,
-        label: item.label,
+        labelKey: item.labelKey,
         value: park?.features?.[item.key],
       })),
     [park]
@@ -132,7 +132,7 @@ export default function ParkDetailsScreen() {
     () =>
       NEEDS.map((item) => ({
         key: item.key,
-        label: item.label,
+        labelKey: item.labelKey,
         value: park?.needsSupported?.[item.key],
       })),
     [park]
@@ -294,13 +294,13 @@ export default function ParkDetailsScreen() {
           {t('screens.parkDetails.reviews')}
         </Text>
         {ratings.length ? (
-          ratings.map((rating) => {
+          ratings.map((rating, index) => {
             const dateLabel = rating.createdAt
               ? new Date(rating.createdAt).toLocaleDateString()
               : t('screens.parkDetails.reviewDateUnknown');
             return (
               <View
-                key={rating.id}
+                key={rating.id || `${rating.parkId}-${index}`}
                 style={[styles.reviewCard, { borderColor: colors.border }]}
               >
                 <Text style={[styles.reviewScore, { color: colors.primary }]}>

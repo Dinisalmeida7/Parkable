@@ -1,5 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  PanResponder,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
@@ -34,6 +43,11 @@ export default function MapScreen() {
   const navigation = useNavigation();
   const [userLocation, setUserLocation] = useState(null);
   const [locationDenied, setLocationDenied] = useState(false);
+  const sheetTranslateY = useRef(new Animated.Value(0)).current;
+  const sheetOffset = useRef(0);
+  const sheetHeight = useMemo(() => Math.round(Dimensions.get('window').height * 0.48), []);
+  const sheetPeek = 85;
+  const maxSheetTranslate = Math.max(0, sheetHeight - sheetPeek);
 
   const parksList = useMemo(() => getParks(), []);
   const topParks = useMemo(
@@ -43,8 +57,8 @@ export default function MapScreen() {
 
   const quickFilters = useMemo(
     () => [
-      { key: 'wheelchair', label: t('screens.map.quickWheelchair') },
-      { key: 'tactile', label: t('screens.map.quickTactile') },
+      { key: 'cadeira de rodas', label: t('screens.map.quickWheelchair') },
+      { key: 'tátil', label: t('screens.map.quickTactile') },
     ],
     [t]
   );
@@ -120,6 +134,28 @@ export default function MapScreen() {
       navigation.goBack();
     }
   };
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dy) > 6,
+        onPanResponderMove: (_, gesture) => {
+          const next = Math.max(0, Math.min(maxSheetTranslate, sheetOffset.current + gesture.dy));
+          sheetTranslateY.setValue(next);
+        },
+        onPanResponderRelease: (_, gesture) => {
+          const shouldHide =
+            gesture.vy > 0.4 || sheetOffset.current + gesture.dy > maxSheetTranslate / 2;
+          const target = shouldHide ? maxSheetTranslate : 0;
+          sheetOffset.current = target;
+          Animated.spring(sheetTranslateY, {
+            toValue: target,
+            useNativeDriver: true,
+          }).start();
+        },
+      }),
+    [maxSheetTranslate, sheetTranslateY]
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -203,24 +239,28 @@ export default function MapScreen() {
         </View>
       </View>
 
-      <View style={[styles.bottomSheet, { backgroundColor: colors.card }]}
-        pointerEvents="box-none"
+      <Animated.View
+        style={[
+          styles.bottomSheet,
+          { backgroundColor: colors.card, transform: [{ translateY: sheetTranslateY }] },
+        ]}
       >
-        <View style={[styles.sheetHandle, { backgroundColor: colors.border }]} />
-        <View style={styles.sheetHeader}>
-          <View>
-            <Text style={[styles.sheetTitle, { color: colors.primary }]}>Nearby Parks</Text>
-            <Text style={[styles.sheetSubtitle, { color: colors.muted }]}
-            >
-              {t('screens.map.nearbySubtitle', {
-                count: topParks.length,
-                radius: userLocation ? '2' : '-'
-              })}
-            </Text>
+        <View {...panResponder.panHandlers}>
+          <View style={[styles.sheetHandle, { backgroundColor: colors.border }]} />
+          <View style={styles.sheetHeader}>
+            <View>
+              <Text style={[styles.sheetTitle, { color: colors.primary }]}>Nearby Parks</Text>
+              <Text style={[styles.sheetSubtitle, { color: colors.muted }]}>
+                {t('screens.map.nearbySubtitle', {
+                  count: topParks.length,
+                  radius: userLocation ? '2' : '-',
+                })}
+              </Text>
+            </View>
+            <Pressable onPress={openSearch}>
+              <Text style={[styles.viewAll, { color: colors.accent }]}>View All</Text>
+            </Pressable>
           </View>
-          <Pressable onPress={openSearch}>
-            <Text style={[styles.viewAll, { color: colors.accent }]}>View All</Text>
-          </Pressable>
         </View>
         <FlatList
           data={topParks}
@@ -269,7 +309,7 @@ export default function MapScreen() {
             );
           }}
         />
-      </View>
+      </Animated.View>
     </View>
   );
 }
