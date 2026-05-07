@@ -76,7 +76,15 @@ export function SessionProvider({ children }) {
 
   const signOut = async () => {
     setIsAuthenticated(false);
-    await AsyncStorage.setItem(STORAGE_KEYS.authenticated, 'false');
+    setIsOnboarded(false);
+    setProfile(null);
+    setNeedsState([]);
+    await Promise.all([
+      AsyncStorage.setItem(STORAGE_KEYS.authenticated, 'false'),
+      AsyncStorage.setItem(STORAGE_KEYS.onboarded, 'false'),
+      AsyncStorage.removeItem(STORAGE_KEYS.profile),
+      AsyncStorage.removeItem(STORAGE_KEYS.needs),
+    ]);
   };
 
   const value = useMemo(

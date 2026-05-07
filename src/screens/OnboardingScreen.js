@@ -8,7 +8,7 @@ import { useSession } from '../session';
 export default function OnboardingScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { setNeeds, setOnboarded } = useSession();
+  const { setNeeds, setOnboarded, signOut } = useSession();
   const [selected, setSelected] = useState([]);
 
   const needsList = useMemo(() => NEEDS, []);
@@ -76,6 +76,12 @@ export default function OnboardingScreen() {
           {t('screens.onboarding.cta')}
         </Text>
       </Pressable>
+
+      <Pressable onPress={signOut} style={styles.backLink}>
+        <Text style={[styles.backText, { color: colors.accent }]}>
+          {t('screens.onboarding.backToAuth')}
+        </Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -116,5 +122,13 @@ const styles = StyleSheet.create({
   ctaText: {
     fontSize: 16,
     fontWeight: '700',
+  },
+  backLink: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  backText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

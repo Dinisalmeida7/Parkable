@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import { applyParkFilters, getParks } from '../data';
 import { useTheme } from '../theme';
 import { useTranslation } from '../i18n';
@@ -10,6 +11,8 @@ export default function MapScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationDenied, setLocationDenied] = useState(false);
 
   const parksList = useMemo(() => getParks(), []);
   const topParks = useMemo(
@@ -17,12 +20,41 @@ export default function MapScreen() {
     [parksList]
   );
 
-  const region = {
-    latitude: 39.5,
-    longitude: -8.0,
-    latitudeDelta: 4.8,
-    longitudeDelta: 4.8,
-  };
+  useEffect(() => {
+    const loadLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLocationDenied(true);
+        return;
+      }
+
+      const current = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        lat: current.coords.latitude,
+        lng: current.coords.longitude,
+      });
+    };
+
+    loadLocation();
+  }, []);
+
+  const region = useMemo(() => {
+    if (userLocation) {
+      return {
+        latitude: userLocation.lat,
+        longitude: userLocation.lng,
+        latitudeDelta: 0.35,
+        longitudeDelta: 0.35,
+      };
+    }
+
+    return {
+      latitude: 39.5,
+      longitude: -8.0,
+      latitudeDelta: 4.8,
+      longitudeDelta: 4.8,
+    };
+  }, [userLocation]);
 
   const openSearch = () => {
     navigation.navigate('Search');
@@ -30,7 +62,11 @@ export default function MapScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <MapView style={styles.map} initialRegion={region}>
+      <MapView
+        style={styles.map}
+        initialRegion={region}
+        key={`${region.latitude}-${region.longitude}`}
+      >
         {parksList.map((park) => (
           <Marker
             key={park.id}
@@ -45,6 +81,11 @@ export default function MapScreen() {
       <View style={[styles.overlay, { backgroundColor: colors.card }]}
         pointerEvents="box-none"
       >
+        {locationDenied && (
+          <Text style={[styles.locationNote, { color: colors.muted }]}>
+            {t('screens.map.locationDenied')}
+          </Text>
+        )}
         <Pressable
           onPress={openSearch}
           style={({ pressed }) => [
@@ -114,6 +155,10 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+  locationNote: {
+    fontSize: 12,
+    marginBottom: 10,
   },
   searchBar: {
     borderWidth: 1,

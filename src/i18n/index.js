@@ -18,6 +18,7 @@ const translations = {
         title: 'Bem-vindo ao Parkable',
         subtitle: 'Escolhe as necessidades para ajustar o mapa.',
         cta: 'Continuar',
+        backToAuth: 'Voltar ao login',
       },
       auth: {
         title: 'Entrar',
@@ -35,6 +36,7 @@ const translations = {
         searchPlaceholder: 'Procurar parques e filtros',
         quickListTitle: 'Mais acessiveis',
         openSearch: 'Abrir',
+        locationDenied: 'Localizacao desativada. A mostrar dados gerais.',
       },
       search: {
         title: 'Pesquisa e filtros',
@@ -47,14 +49,22 @@ const translations = {
         sortDistance: 'Distancia',
         resultsCount: '{{count}} resultados',
         empty: 'Sem resultados para estes filtros.',
+        locationDenied: 'Ativa a localizacao para ordenar por distancia.',
       },
       favorites: {
         title: 'Favoritos',
         subtitle: 'Guarda parques para acesso rapido.',
+        count: '{{count}} favoritos',
+        empty: 'Ainda nao tens favoritos.',
+        remove: 'Remover',
       },
       profile: {
         title: 'Perfil',
         subtitle: 'Preferencias, necessidades e notificacoes.',
+        nameLabel: 'Nome',
+        needsLabel: 'Necessidades selecionadas',
+        needsEmpty: 'Nenhuma necessidade selecionada.',
+        guest: 'Convidado',
         signOut: 'Sair da sessao',
       },
       parkDetails: {
@@ -104,6 +114,7 @@ const translations = {
         title: 'Welcome to Parkable',
         subtitle: 'Pick needs to personalize the map.',
         cta: 'Continue',
+        backToAuth: 'Back to sign in',
       },
       auth: {
         title: 'Sign in',
@@ -121,6 +132,7 @@ const translations = {
         searchPlaceholder: 'Search parks and filters',
         quickListTitle: 'Most accessible',
         openSearch: 'Open',
+        locationDenied: 'Location disabled. Showing general results.',
       },
       search: {
         title: 'Search and filters',
@@ -133,14 +145,22 @@ const translations = {
         sortDistance: 'Distance',
         resultsCount: '{{count}} results',
         empty: 'No results for these filters.',
+        locationDenied: 'Enable location to sort by distance.',
       },
       favorites: {
         title: 'Favorites',
         subtitle: 'Save parks for quick access.',
+        count: '{{count}} favorites',
+        empty: 'You have no favorites yet.',
+        remove: 'Remove',
       },
       profile: {
         title: 'Profile',
         subtitle: 'Preferences, needs, and notifications.',
+        nameLabel: 'Name',
+        needsLabel: 'Selected needs',
+        needsEmpty: 'No needs selected yet.',
+        guest: 'Guest',
         signOut: 'Sign out',
       },
       parkDetails: {

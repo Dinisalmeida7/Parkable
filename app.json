@@ -13,11 +13,18 @@
     },
     "ios": {
       "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Usamos a sua localizacao para ordenar parques por distancia."
+      },
       "config": {
         "googleMapsApiKey": "AIzaSyAyfPbkG0kVudLTdhVa9RN2jwKV2S6FZqk"
       }
     },
     "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAyfPbkG0kVudLTdhVa9RN2jwKV2S6FZqk"

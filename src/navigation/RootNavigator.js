@@ -77,17 +77,17 @@ export function RootNavigator() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      {!isOnboarded ? (
-        <Stack.Screen
-          name="Onboarding"
-          component={OnboardingScreen}
-          options={{ headerShown: false }}
-        />
-      ) : !isAuthenticated ? (
+      {!isAuthenticated ? (
         <Stack.Screen
           name="Auth"
           component={AuthScreen}
           options={{ title: t('screens.auth.title') }}
+        />
+      ) : !isOnboarded ? (
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={{ headerShown: false }}
         />
       ) : (
         <>

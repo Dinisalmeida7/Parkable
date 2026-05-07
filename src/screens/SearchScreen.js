@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Pressable,
@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import { applyParkFilters, EQUIPMENT, getParks, NEEDS } from '../data';
 import { useTheme } from '../theme';
 import { useTranslation } from '../i18n';
@@ -20,9 +21,27 @@ export default function SearchScreen() {
   const [selectedNeeds, setSelectedNeeds] = useState([]);
   const [selectedEquipment, setSelectedEquipment] = useState([]);
   const [sort, setSort] = useState('accessibility');
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationDenied, setLocationDenied] = useState(false);
 
   const parksList = useMemo(() => getParks(), []);
-  const userLocation = { lat: 38.7223, lng: -9.1393 };
+  useEffect(() => {
+    const loadLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLocationDenied(true);
+        return;
+      }
+
+      const current = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        lat: current.coords.latitude,
+        lng: current.coords.longitude,
+      });
+    };
+
+    loadLocation();
+  }, []);
 
   const results = useMemo(
     () =>
@@ -34,7 +53,7 @@ export default function SearchScreen() {
         sort,
         userLocation,
       }),
-    [parksList, selectedNeeds, selectedEquipment, query, sort]
+    [parksList, selectedNeeds, selectedEquipment, query, sort, userLocation]
   );
 
   const toggleNeed = (key) => {
@@ -153,6 +172,11 @@ export default function SearchScreen() {
           </Text>
         </Pressable>
       </View>
+      {locationDenied && sort === 'distance' && (
+        <Text style={[styles.locationNote, { color: colors.muted }]}>
+          {t('screens.search.locationDenied')}
+        </Text>
+      )}
 
       <Text style={[styles.resultsTitle, { color: colors.text }]}>
         {t('screens.search.resultsCount', { count: results.length })}
@@ -232,6 +256,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     marginTop: 8,
+  },
+  locationNote: {
+    marginTop: 8,
+    fontSize: 12,
   },
   sortChip: {
     paddingVertical: 8,
