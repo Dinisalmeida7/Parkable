@@ -11,7 +11,7 @@ export default function AuthScreen() {
   const [name, setName] = useState('');
 
   const handleLogin = async () => {
-    const displayName = name.trim() || 'Guest';
+    const displayName = name.trim() || t('screens.profile.guest');
     await setAuthenticated(true, { name: displayName });
   };
 

@@ -66,7 +66,7 @@ export default function ParkDetailsScreen() {
   }, [loadDetails]);
 
   useEffect(() => {
-    if (parkId) {
+    if (parkId && getParkById(parkId)) {
       addHistoryEntry(parkId);
     }
   }, [parkId]);
@@ -230,7 +230,7 @@ export default function ParkDetailsScreen() {
               ]}
             >
               <Text style={{ color: item.value ? colors.card : colors.text }}>
-                {item.label}
+                {t(item.labelKey)}
               </Text>
             </View>
           ))}
@@ -254,7 +254,7 @@ export default function ParkDetailsScreen() {
               ]}
             >
               <Text style={{ color: item.value ? colors.text : colors.text }}>
-                {item.label}
+                {t(item.labelKey)}
               </Text>
             </View>
           ))}

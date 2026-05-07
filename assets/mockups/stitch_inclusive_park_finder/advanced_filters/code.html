@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkAble - Advanced Filters</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-container": "#cd8f00",
+                "primary-fixed-dim": "#88d982",
+                "on-secondary-fixed": "#001c3a",
+                "secondary-container": "#54a0fe",
+                "on-background": "#1a1c1c",
+                "surface-container-high": "#e8e8e8",
+                "outline-variant": "#becab9",
+                "on-surface": "#1a1c1c",
+                "on-tertiary": "#ffffff",
+                "primary": "#1b6d24",
+                "tertiary-fixed-dim": "#ffba38",
+                "surface-dim": "#dadada",
+                "primary-fixed": "#a3f69c",
+                "on-surface-variant": "#3f4a3c",
+                "surface-container-low": "#f3f3f3",
+                "error-container": "#ffdad6",
+                "inverse-primary": "#88d982",
+                "on-secondary-container": "#003567",
+                "surface-bright": "#f9f9f9",
+                "on-tertiary-fixed-variant": "#604100",
+                "surface-container": "#eeeeee",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed": "#281900",
+                "on-primary-fixed": "#002204",
+                "surface-tint": "#1b6d24",
+                "tertiary": "#7e5700",
+                "on-secondary-fixed-variant": "#004786",
+                "on-primary-container": "#003c0a",
+                "surface-container-highest": "#e2e2e2",
+                "secondary-fixed-dim": "#a5c8ff",
+                "tertiary-fixed": "#ffdeac",
+                "background": "#f9f9f9",
+                "primary-container": "#5dac5b",
+                "surface": "#f9f9f9",
+                "outline": "#6f7a6b",
+                "secondary": "#005faf",
+                "secondary-fixed": "#d4e3ff",
+                "on-error-container": "#93000a",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#2f3131",
+                "surface-variant": "#e2e2e2",
+                "surface-container-lowest": "#ffffff",
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "on-primary-fixed-variant": "#005312",
+                "on-tertiary-container": "#462e00",
+                "inverse-on-surface": "#f1f1f1"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Be Vietnam Pro"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Top Navigation Anchor (Simulating the App Shell) -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-white/80 backdrop-blur-xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-800">arrow_back</span>
+<span class="text-green-800 font-headline font-bold text-lg tracking-tight">ParkAble</span>
+</div>
+<span class="material-symbols-outlined text-green-800">settings_accessibility</span>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative h-screen w-full flex flex-col pt-16">
+<!-- Background Map (Contextual Background) -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-30 grayscale contrast-50" data-alt="abstract satellite view of city streets and green park areas with soft color palette and minimal detail" data-location="Portland, Oregon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZC8Lp1xIXVolIBto1VusHPwuafr0dY1uCF9e-7p7acy4HfKfMf8ABAlB-dzW6Tq91QWug7JY5Xh760DT6nkZfCv9aXP3TxE58Aj09Bzv8aeUG8PX1_jAsOldbHZJMUZH4s4SsaRuRlWB2RvCpFPB5SSry7fDMrRkxQBvll-El0_yL8VgxTAzBdjhtEzVDf_zzc-TL-Y-AQigPTNfK44u-zlo7E0HV1QryaYFbyhJ8Aj9q9llYmULMbuaGamR-vNkZ6NK9r6Gb_cU"/>
+</div>
+<!-- Slide-up Panel (The Filters) -->
+<div class="relative mt-auto z-10 w-full bg-surface-container-lowest rounded-t-[3rem] shadow-[0_-24px_48px_-12px_rgba(0,0,0,0.1)] flex flex-col h-[751px]">
+<!-- Pull Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-12 h-1.5 bg-surface-container-highest rounded-full"></div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-6 pb-24 hide-scrollbar">
+<!-- Screen Header -->
+<div class="mb-8 mt-2">
+<h1 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight ml-2">Advanced Filters</h1>
+<p class="font-body text-on-surface-variant ml-2 mt-1">Tailor your park search to your specific needs.</p>
+</div>
+<!-- Section: Need Type -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-4 px-2">
+<h2 class="font-headline font-bold text-xl text-primary">Need Type</h2>
+<span class="text-xs font-bold text-primary bg-primary-fixed px-3 py-1 rounded-full uppercase tracking-widest">Recommended</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Need Option -->
+<div class="p-5 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-primary-container transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">accessible</span>
+</div>
+<span class="font-headline font-bold text-on-surface block">Motor</span>
+<span class="text-xs text-on-surface-variant font-medium">Mobility &amp; Access</span>
+</div>
+<!-- Need Option -->
+<div class="p-5 rounded-lg bg-primary-container/10 border-2 border-primary transition-all cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-on-primary text-3xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<span class="font-headline font-bold text-primary block">Cognitive</span>
+<span class="text-xs text-primary/80 font-medium">Sensory friendly</span>
+</div>
+<!-- Need Option -->
+<div class="p-5 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-primary-container transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">visibility_off</span>
+</div>
+<span class="font-headline font-bold text-on-surface block">Visual</span>
+<span class="text-xs text-on-surface-variant font-medium">Tactile paths</span>
+</div>
+<!-- Need Option -->
+<div class="p-5 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-primary-container transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">hearing</span>
+</div>
+<span class="font-headline font-bold text-on-surface block">Hearing</span>
+<span class="text-xs text-on-surface-variant font-medium">Visual signals</span>
+</div>
+</div>
+</section>
+<!-- Section: Equipment -->
+<section class="mb-10">
+<h2 class="font-headline font-bold text-xl text-primary mb-4 px-2">Equipment</h2>
+<div class="space-y-3">
+<label class="flex items-center justify-between p-4 bg-surface rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">stroller</span>
+</div>
+<div>
+<span class="font-headline font-semibold text-on-surface">Accessible Swings</span>
+<p class="text-xs text-on-surface-variant">Harness &amp; bucket styles available</p>
+</div>
+</div>
+<input checked="" class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary-fixed-dim bg-white" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">ramp_left</span>
+</div>
+<div>
+<span class="font-headline font-semibold text-on-surface">Playground Ramps</span>
+<p class="text-xs text-on-surface-variant">Full wheelchair access to play decks</p>
+</div>
+</div>
+<input class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary-fixed-dim bg-white" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">extension</span>
+</div>
+<div>
+<span class="font-headline font-semibold text-on-surface">Sensory Zones</span>
+<p class="text-xs text-on-surface-variant">Interactive musical &amp; tactile panels</p>
+</div>
+</div>
+<input checked="" class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary-fixed-dim bg-white" type="checkbox"/>
+</label>
+</div>
+</section>
+<!-- Section: Accessibility Features -->
+<section class="mb-10">
+<h2 class="font-headline font-bold text-xl text-primary mb-4 px-2">Accessibility Features</h2>
+<!-- Bento-style grid for features -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-6 bg-tertiary-container/10 rounded-lg flex flex-col justify-between">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-4">wc</span>
+<div>
+<h3 class="font-headline font-bold text-on-tertiary-container">Accessible Toilets</h3>
+<p class="text-sm text-on-tertiary-container/70 mb-4">RADAR key access or standard accessible.</p>
+<button class="w-full py-2 bg-tertiary text-on-tertiary font-bold rounded-full text-xs uppercase tracking-widest">Required</button>
+</div>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-surface-container-high rounded-lg flex items-center gap-4">
+<div class="flex-1">
+<h3 class="font-headline font-bold text-on-surface leading-tight">Tactile Signage</h3>
+<p class="text-xs text-on-surface-variant">Braille &amp; high contrast</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high rounded-lg flex items-center gap-4">
+<div class="flex-1">
+<h3 class="font-headline font-bold text-on-surface leading-tight">Rubber Flooring</h3>
+<p class="text-xs text-on-surface-variant">Soft, safe ground impact</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Action -->
+<div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/90 to-transparent flex gap-4">
+<button class="flex-1 py-4 bg-surface-container-highest text-on-surface font-headline font-bold rounded-full transition-transform active:scale-95">
+                    Reset
+                </button>
+<button class="flex-[2] py-4 bg-primary text-on-primary font-headline font-extrabold rounded-full shadow-lg shadow-primary/20 transition-transform active:scale-95">
+                    Apply Filters
+                </button>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Anchor (Visible for context but pushed down) -->
+<nav class="fixed bottom-0 left-0 w-full z-[60] flex justify-around items-center px-4 pb-6 bg-white/80 backdrop-blur-xl">
+<div class="flex flex-col items-center justify-center text-zinc-500 px-6 py-2">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Map</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-green-100 text-green-800 rounded-2xl px-6 py-2 transition-all">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-500 px-6 py-2">
+<span class="material-symbols-outlined mb-1">favorite</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Saved</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-500 px-6 py-2">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Profile</span>
+</div>
+</nav>
+</body></html>

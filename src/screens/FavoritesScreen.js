@@ -13,7 +13,12 @@ export default function FavoritesScreen() {
 
   const loadFavorites = useCallback(async () => {
     const storedFavorites = await getFavorites();
-    setFavoriteIds(storedFavorites);
+    const validFavorites = storedFavorites.filter((id) => !!getParkById(id));
+    if (validFavorites.length !== storedFavorites.length) {
+      setFavoriteIds(validFavorites);
+    } else {
+      setFavoriteIds(storedFavorites);
+    }
   }, []);
 
   useFocusEffect(

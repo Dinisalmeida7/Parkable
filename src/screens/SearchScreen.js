@@ -26,21 +26,47 @@ export default function SearchScreen() {
 
   const parksList = useMemo(() => getParks(), []);
   useEffect(() => {
-    const loadLocation = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setLocationDenied(true);
-        return;
-      }
+    let isMounted = true;
 
-      const current = await Location.getCurrentPositionAsync({});
-      setUserLocation({
-        lat: current.coords.latitude,
-        lng: current.coords.longitude,
-      });
+    const loadLocation = async () => {
+      try {
+        const servicesEnabled = await Location.hasServicesEnabledAsync();
+        if (!servicesEnabled) {
+          if (isMounted) {
+            setLocationDenied(true);
+          }
+          return;
+        }
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          if (isMounted) {
+            setLocationDenied(true);
+          }
+          return;
+        }
+
+        const current = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        if (isMounted) {
+          setUserLocation({
+            lat: current.coords.latitude,
+            lng: current.coords.longitude,
+          });
+        }
+      } catch (error) {
+        if (isMounted) {
+          setLocationDenied(true);
+        }
+      }
     };
 
     loadLocation();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const results = useMemo(
@@ -103,7 +129,7 @@ export default function SearchScreen() {
               ]}
             >
               <Text style={{ color: isActive ? colors.card : colors.text, fontWeight: '600' }}>
-                {need.label}
+                {t(need.labelKey)}
               </Text>
             </Pressable>
           );
@@ -130,7 +156,7 @@ export default function SearchScreen() {
               ]}
             >
               <Text style={{ color: isActive ? colors.text : colors.text, fontWeight: '600' }}>
-                {item.label}
+                {t(item.labelKey)}
               </Text>
             </Pressable>
           );

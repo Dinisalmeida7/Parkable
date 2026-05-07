@@ -46,7 +46,9 @@ export default function ProfileScreen() {
                   { backgroundColor: colors.accent, borderColor: colors.accent },
                 ]}
               >
-                <Text style={{ color: colors.text, fontWeight: '600' }}>{item.label}</Text>
+                <Text style={{ color: colors.text, fontWeight: '600' }}>
+                  {t(item.labelKey)}
+                </Text>
               </View>
             ))}
           </View>

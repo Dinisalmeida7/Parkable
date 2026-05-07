@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#cd8f00",
+                    "primary-fixed-dim": "#88d982",
+                    "on-secondary-fixed": "#001c3a",
+                    "secondary-container": "#54a0fe",
+                    "on-background": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "outline-variant": "#becab9",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#1b6d24",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#a3f69c",
+                    "on-surface-variant": "#3f4a3c",
+                    "surface-container-low": "#f3f3f3",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#88d982",
+                    "on-secondary-container": "#003567",
+                    "surface-bright": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#281900",
+                    "on-primary-fixed": "#002204",
+                    "surface-tint": "#1b6d24",
+                    "tertiary": "#7e5700",
+                    "on-secondary-fixed-variant": "#004786",
+                    "on-primary-container": "#003c0a",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary-fixed-dim": "#a5c8ff",
+                    "tertiary-fixed": "#ffdeac",
+                    "background": "#f9f9f9",
+                    "primary-container": "#5dac5b",
+                    "surface": "#f9f9f9",
+                    "outline": "#6f7a6b",
+                    "secondary": "#005faf",
+                    "secondary-fixed": "#d4e3ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-tertiary-container": "#462e00",
+                    "inverse-on-surface": "#f1f1f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar Navigation Shell Suppression logic applied for Onboarding -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-white/80 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-200/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-green-800" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-green-800 font-headline font-bold text-lg tracking-tight">ParkAble</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="h-1.5 w-16 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-primary rounded-full"></div>
+</div>
+<span class="text-xs font-label text-zinc-500">Step 2 of 3</span>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 px-6 max-w-2xl mx-auto w-full">
+<!-- Editorial Headline -->
+<div class="mb-10 ml-2">
+<h1 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight mb-3">
+                What are your child's needs?
+            </h1>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-md">
+                Select one or more categories to help us find the most inclusive parks and facilities for your family.
+            </p>
+</div>
+<!-- Choice Bento Grid -->
+<div class="selection-grid mb-12">
+<!-- Motor Needs (Selected State Example) -->
+<button class="relative group flex flex-col items-start p-6 rounded-lg bg-surface-container-lowest transition-all duration-300 ring-2 ring-primary ring-offset-4">
+<div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center mb-4 text-on-primary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="accessible_forward" style="font-variation-settings: 'FILL' 1;">accessible_forward</span>
+</div>
+<span class="font-headline font-bold text-lg text-on-surface mb-1">Motor Needs</span>
+<p class="text-sm text-on-surface-variant text-left leading-snug">Ramps, tactile paths, and specialized swings.</p>
+<div class="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+</button>
+<!-- Cognitive/Autism -->
+<button class="relative group flex flex-col items-start p-6 rounded-lg bg-surface-container-lowest hover:bg-surface-container transition-all duration-300 active:scale-[0.98]">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center mb-4 text-on-secondary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="psychology" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<span class="font-headline font-bold text-lg text-on-surface mb-1">Cognitive/Autism</span>
+<p class="text-sm text-on-surface-variant text-left leading-snug">Quiet zones, fenced areas, and visual guides.</p>
+</button>
+<!-- Visual Impairment -->
+<button class="relative group flex flex-col items-start p-6 rounded-lg bg-surface-container-lowest hover:bg-surface-container transition-all duration-300 active:scale-[0.98]">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-container flex items-center justify-center mb-4 text-on-tertiary">
+<span class="material-symbols-outlined text-3xl" data-icon="visibility" style="font-variation-settings: 'FILL' 1;">visibility</span>
+</div>
+<span class="font-headline font-bold text-lg text-on-surface mb-1">Visual Impairment</span>
+<p class="text-sm text-on-surface-variant text-left leading-snug">High-contrast signs and audio descriptions.</p>
+</button>
+<!-- Hearing Impairment -->
+<button class="relative group flex flex-col items-start p-6 rounded-lg bg-surface-container-lowest hover:bg-surface-container transition-all duration-300 active:scale-[0.98]">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed-dim flex items-center justify-center mb-4 text-on-primary-fixed">
+<span class="material-symbols-outlined text-3xl" data-icon="hearing" style="font-variation-settings: 'FILL' 1;">hearing</span>
+</div>
+<span class="font-headline font-bold text-lg text-on-surface mb-1">Hearing Impairment</span>
+<p class="text-sm text-on-surface-variant text-left leading-snug">Visual alerts and vibration-based play.</p>
+</button>
+</div>
+<!-- Accessibility Quick-Toggle Chip Section -->
+<div class="flex flex-wrap gap-3 items-center">
+<span class="text-xs font-label uppercase tracking-widest text-zinc-500 w-full mb-1">Additional Filters</span>
+<button class="px-4 py-2 rounded-full bg-tertiary-container text-on-tertiary font-label text-sm flex items-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="pets">pets</span>
+                Service Animal Friendly
+            </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-sm flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="baby_changing_station">baby_changing_station</span>
+                Adaptive Changing Rooms
+            </button>
+</div>
+</main>
+<!-- Bottom Action Container -->
+<footer class="fixed bottom-0 left-0 w-full p-6 bg-white/60 backdrop-blur-md">
+<div class="max-w-2xl mx-auto flex flex-col gap-4">
+<button class="w-full h-14 bg-primary text-on-primary font-headline font-bold rounded-full text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all hover:bg-primary/90 active:scale-95">
+                Continue
+                <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full h-10 text-on-surface-variant font-label text-sm hover:underline decoration-2 underline-offset-4">
+                I'm not sure yet, skip this step
+            </button>
+</div>
+</footer>
+<!-- Decorative Organic Background Element -->
+<div class="fixed top-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[-5%] left-[-5%] w-[30vw] h-[30vw] bg-secondary-container/10 rounded-full blur-[80px] pointer-events-none -z-10"></div>
+</body></html>

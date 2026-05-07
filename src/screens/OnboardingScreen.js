@@ -55,7 +55,7 @@ export default function OnboardingScreen() {
                   fontWeight: '600',
                 }}
               >
-                {need.label}
+                {t(need.labelKey)}
               </Text>
             </Pressable>
           );

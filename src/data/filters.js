@@ -21,19 +21,19 @@ const haversineDistanceKm = (from, to) => {
 };
 
 export const NEEDS = [
-  { key: 'mobility', label: 'Mobilidade' },
-  { key: 'visual', label: 'Visual' },
-  { key: 'auditory', label: 'Auditiva' },
-  { key: 'cognitive', label: 'Cognitiva' },
+  { key: 'mobility', labelKey: 'labels.needs.mobility' },
+  { key: 'visual', labelKey: 'labels.needs.visual' },
+  { key: 'auditory', labelKey: 'labels.needs.auditory' },
+  { key: 'cognitive', labelKey: 'labels.needs.cognitive' },
 ];
 
 export const EQUIPMENT = [
-  { key: 'ramps', label: 'Rampas' },
-  { key: 'tactileFloor', label: 'Piso tatil' },
-  { key: 'accessibleToilets', label: 'Sanitarios' },
-  { key: 'sensoryZone', label: 'Zona sensorial' },
-  { key: 'audioGuides', label: 'Guia audio' },
-  { key: 'accessibleParking', label: 'Estacionamento' },
+  { key: 'ramps', labelKey: 'labels.equipment.ramps' },
+  { key: 'tactileFloor', labelKey: 'labels.equipment.tactileFloor' },
+  { key: 'accessibleToilets', labelKey: 'labels.equipment.accessibleToilets' },
+  { key: 'sensoryZone', labelKey: 'labels.equipment.sensoryZone' },
+  { key: 'audioGuides', labelKey: 'labels.equipment.audioGuides' },
+  { key: 'accessibleParking', labelKey: 'labels.equipment.accessibleParking' },
 ];
 
 export const filterByNeeds = (parksList, needsKeys = []) => {

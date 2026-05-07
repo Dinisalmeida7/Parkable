@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#cd8f00",
+                    "primary-fixed-dim": "#88d982",
+                    "on-secondary-fixed": "#001c3a",
+                    "secondary-container": "#54a0fe",
+                    "on-background": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "outline-variant": "#becab9",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#1b6d24",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#a3f69c",
+                    "on-surface-variant": "#3f4a3c",
+                    "surface-container-low": "#f3f3f3",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#88d982",
+                    "on-secondary-container": "#003567",
+                    "surface-bright": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#281900",
+                    "on-primary-fixed": "#002204",
+                    "surface-tint": "#1b6d24",
+                    "tertiary": "#7e5700",
+                    "on-secondary-fixed-variant": "#004786",
+                    "on-primary-container": "#003c0a",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary-fixed-dim": "#a5c8ff",
+                    "tertiary-fixed": "#ffdeac",
+                    "background": "#f9f9f9",
+                    "primary-container": "#5dac5b",
+                    "surface": "#f9f9f9",
+                    "outline": "#6f7a6b",
+                    "secondary": "#005faf",
+                    "secondary-fixed": "#d4e3ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-tertiary-container": "#462e00",
+                    "inverse-on-surface": "#f1f1f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-zinc-200/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-green-800 dark:text-green-500">arrow_back</span>
+</button>
+</div>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight text-green-800 dark:text-green-500">ParkAble</span>
+<button class="p-2 rounded-full hover:bg-zinc-200/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-green-800 dark:text-green-500">settings_accessibility</span>
+</button>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-16 pb-32 max-w-4xl mx-auto">
+<!-- Photo Carousel Section -->
+<section class="relative px-6 py-4">
+<div class="flex overflow-x-auto gap-4 no-scrollbar snap-x">
+<div class="flex-none w-[85%] aspect-[4/3] rounded-lg overflow-hidden snap-center relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Inclusive playground with colorful equipment, ramps, and rubber safety flooring under bright sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-bold">1/5</div>
+</div>
+<div class="flex-none w-[85%] aspect-[4/3] rounded-lg overflow-hidden snap-center relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close-up of an accessible ramp and sensory play panel on a modern inclusive playground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+</div>
+<div class="flex-none w-[85%] aspect-[4/3] rounded-lg overflow-hidden snap-center relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Wide view of a park featuring a large accessible play structure with multiple entry points for all abilities" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+</div>
+</div>
+</section>
+<!-- Header Info -->
+<header class="px-8 mt-4">
+<div class="flex justify-between items-start">
+<div>
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface leading-tight">Emerald Glen Park</h1>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-secondary text-sm">location_on</span>
+<span>Dublin, CA • 1.2 miles away</span>
+</div>
+</div>
+<div class="bg-primary-container/20 px-3 py-2 rounded-2xl flex flex-col items-center">
+<span class="text-primary font-bold text-xl leading-none">4.8</span>
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest">Rating</span>
+</div>
+</div>
+<div class="flex gap-2 mt-6 overflow-x-auto no-scrollbar">
+<span class="inline-flex items-center gap-1.5 px-4 py-2 bg-tertiary-container text-white rounded-full text-sm font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">accessible_forward</span>
+                    Wheelchair Friendly
+                </span>
+<span class="inline-flex items-center gap-1.5 px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-sm">volume_up</span>
+                    Tactile Paths
+                </span>
+<span class="inline-flex items-center gap-1.5 px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-sm">pets</span>
+                    Service Dogs
+                </span>
+</div>
+</header>
+<!-- Bento Grid: Accessibility Breakdown -->
+<section class="px-6 mt-10">
+<h2 class="px-2 mb-6 text-xl font-bold tracking-tight">Accessibility Scorecard</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Mobility Card -->
+<div class="col-span-1 bg-surface-container-lowest p-6 rounded-lg flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded-xl">blind</span>
+<span class="text-sm font-bold text-primary">98%</span>
+</div>
+<div>
+<p class="font-bold text-sm">Mobility</p>
+<p class="text-xs text-on-surface-variant mt-1">Level terrain &amp; wide paths</p>
+</div>
+</div>
+<!-- Equipment Card -->
+<div class="col-span-1 bg-surface-container-lowest p-6 rounded-lg flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-secondary bg-secondary-container/10 p-2 rounded-xl">family_restroom</span>
+<span class="text-sm font-bold text-secondary">85%</span>
+</div>
+<div>
+<p class="font-bold text-sm">Equipment</p>
+<p class="text-xs text-on-surface-variant mt-1">Inclusive play systems</p>
+</div>
+</div>
+<!-- Signage Card -->
+<div class="col-span-2 bg-surface-container-lowest p-6 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-tertiary bg-tertiary-fixed-dim/20 p-2 rounded-xl">signpost</span>
+<div>
+<p class="font-bold text-sm">Signage &amp; Wayfinding</p>
+<p class="text-xs text-on-surface-variant">Braille and high-contrast maps</p>
+</div>
+</div>
+<span class="text-sm font-bold text-tertiary">92%</span>
+</div>
+<!-- Safety Card -->
+<div class="col-span-1 bg-surface-container-lowest p-6 rounded-lg flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-error bg-error-container/30 p-2 rounded-xl">shield</span>
+<span class="text-sm font-bold text-error">95%</span>
+</div>
+<div>
+<p class="font-bold text-sm">Safety</p>
+<p class="text-xs text-on-surface-variant mt-1">Lighting &amp; Emergency</p>
+</div>
+</div>
+<!-- Toilets Card -->
+<div class="col-span-1 bg-surface-container-lowest p-6 rounded-lg flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary-container bg-primary/5 p-2 rounded-xl">wc</span>
+<span class="text-sm font-bold text-primary-container">78%</span>
+</div>
+<div>
+<p class="font-bold text-sm">Toilets</p>
+<p class="text-xs text-on-surface-variant mt-1">Accessible stalls</p>
+</div>
+</div>
+</div>
+</section>
+<!-- User Reviews Summary -->
+<section class="px-6 mt-12">
+<div class="flex justify-between items-end mb-6 px-2">
+<div>
+<h2 class="text-xl font-bold tracking-tight">Community Voice</h2>
+<p class="text-xs text-on-surface-variant">Last updated: May 12, 2024</p>
+</div>
+<button class="text-sm font-bold text-primary">View all 124</button>
+</div>
+<!-- Review Cards Stack -->
+<div class="space-y-4">
+<div class="bg-surface-container-low p-6 rounded-lg">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-white font-bold">JD</div>
+<div>
+<p class="text-sm font-bold">James D.</p>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">The tactile paving here is some of the best I've encountered. The staff is very helpful and knowledgeable about accessibility routes.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold">SM</div>
+<div>
+<p class="text-sm font-bold">Sarah M.</p>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs text-surface-variant" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Great ramps, but the public restrooms near the north entrance were closed for maintenance today. Overall very easy to navigate.</p>
+</div>
+</div>
+</section>
+<!-- Sticky Bottom CTA -->
+<div class="fixed bottom-0 left-0 w-full px-6 py-8 bg-gradient-to-t from-surface via-surface to-transparent pointer-events-none">
+<div class="max-w-4xl mx-auto flex gap-4 pointer-events-auto">
+<button class="flex-1 h-14 bg-primary text-on-primary rounded-full font-bold text-lg shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95 transition-all">
+<span class="material-symbols-outlined">directions</span>
+                    Get Directions
+                </button>
+<button class="w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center shadow-xl shadow-secondary/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Component -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl md:hidden">
+<div class="fixed bottom-4 left-4 right-4 rounded-3xl overflow-hidden bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)] flex justify-around items-center h-20">
+<div class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+<span class="material-symbols-outlined">map</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Saved</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-2xl px-6 py-2 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

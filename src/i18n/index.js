@@ -7,6 +7,22 @@ const translations = {
     app: {
       title: 'Parkable',
     },
+    labels: {
+      needs: {
+        mobility: 'Mobilidade',
+        visual: 'Visual',
+        auditory: 'Auditiva',
+        cognitive: 'Cognitiva',
+      },
+      equipment: {
+        ramps: 'Rampas',
+        tactileFloor: 'Piso tatil',
+        accessibleToilets: 'Sanitarios',
+        sensoryZone: 'Zona sensorial',
+        audioGuides: 'Guia audio',
+        accessibleParking: 'Estacionamento',
+      },
+    },
     tabs: {
       map: 'Mapa',
       search: 'Pesquisa',
@@ -37,6 +53,9 @@ const translations = {
         quickListTitle: 'Mais acessiveis',
         openSearch: 'Abrir',
         locationDenied: 'Localizacao desativada. A mostrar dados gerais.',
+        quickWheelchair: 'Wheelchair Friendly',
+        quickTactile: 'Tactile Paths',
+        nearbySubtitle: '{{count}} acessiveis num raio de {{radius}} km',
       },
       search: {
         title: 'Pesquisa e filtros',
@@ -84,6 +103,7 @@ const translations = {
         alertUntil: 'Ate {{date}}',
         reviews: 'Reviews',
         reviewsEmpty: 'Sem reviews ainda.',
+        reviewDateUnknown: 'Data desconhecida',
         addReview: 'Adicionar review',
         submitReview: 'Enviar review',
         commentPlaceholder: 'Partilha a tua experiencia...',
@@ -102,6 +122,22 @@ const translations = {
   en: {
     app: {
       title: 'Parkable',
+    },
+    labels: {
+      needs: {
+        mobility: 'Mobility',
+        visual: 'Visual',
+        auditory: 'Auditory',
+        cognitive: 'Cognitive',
+      },
+      equipment: {
+        ramps: 'Ramps',
+        tactileFloor: 'Tactile floor',
+        accessibleToilets: 'Accessible toilets',
+        sensoryZone: 'Sensory zone',
+        audioGuides: 'Audio guides',
+        accessibleParking: 'Accessible parking',
+      },
     },
     tabs: {
       map: 'Map',
@@ -133,6 +169,9 @@ const translations = {
         quickListTitle: 'Most accessible',
         openSearch: 'Open',
         locationDenied: 'Location disabled. Showing general results.',
+        quickWheelchair: 'Wheelchair Friendly',
+        quickTactile: 'Tactile Paths',
+        nearbySubtitle: '{{count}} accessible spaces within {{radius}} km',
       },
       search: {
         title: 'Search and filters',
@@ -180,6 +219,7 @@ const translations = {
         alertUntil: 'Until {{date}}',
         reviews: 'Reviews',
         reviewsEmpty: 'No reviews yet.',
+        reviewDateUnknown: 'Date unknown',
         addReview: 'Add review',
         submitReview: 'Submit review',
         commentPlaceholder: 'Share your experience...',

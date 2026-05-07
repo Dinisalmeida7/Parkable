@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#cd8f00",
+                    "primary-fixed-dim": "#88d982",
+                    "on-secondary-fixed": "#001c3a",
+                    "secondary-container": "#54a0fe",
+                    "on-background": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "outline-variant": "#becab9",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#1b6d24",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#a3f69c",
+                    "on-surface-variant": "#3f4a3c",
+                    "surface-container-low": "#f3f3f3",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#88d982",
+                    "on-secondary-container": "#003567",
+                    "surface-bright": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#281900",
+                    "on-primary-fixed": "#002204",
+                    "surface-tint": "#1b6d24",
+                    "tertiary": "#7e5700",
+                    "on-secondary-fixed-variant": "#004786",
+                    "on-primary-container": "#003c0a",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary-fixed-dim": "#a5c8ff",
+                    "tertiary-fixed": "#ffdeac",
+                    "background": "#f9f9f9",
+                    "primary-container": "#5dac5b",
+                    "surface": "#f9f9f9",
+                    "outline": "#6f7a6b",
+                    "secondary": "#005faf",
+                    "secondary-fixed": "#d4e3ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-tertiary-container": "#462e00",
+                    "inverse-on-surface": "#f1f1f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .organic-bg {
+            background: radial-gradient(circle at 20% 20%, #a3f69c 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, #5dac5b 0%, transparent 40%),
+                        #f9f9f9;
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Splash Screen Container -->
+<main class="relative min-h-screen w-full flex flex-col items-center justify-center organic-bg overflow-hidden">
+<!-- Decorative Organic Elements (Asymmetric Breathing Room) -->
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-fixed/30 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-32 -right-32 w-[32rem] h-[32rem] bg-secondary-fixed/20 rounded-full blur-3xl"></div>
+<!-- Content Canvas -->
+<div class="relative z-10 flex flex-col items-center px-8 text-center">
+<!-- Logo Section -->
+<div class="mb-12 relative">
+<div class="w-32 h-32 md:w-40 md:h-40 bg-surface-container-lowest rounded-lg shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)] flex items-center justify-center p-6 border border-white/40">
+<span class="material-symbols-outlined text-primary text-7xl md:text-8xl" style="font-variation-settings: 'FILL' 1;">
+                        park
+                    </span>
+</div>
+<!-- Subtle Accent Tag -->
+<div class="absolute -top-4 -right-4 bg-tertiary-container text-on-tertiary px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg">
+                    Accessible
+                </div>
+</div>
+<!-- Brand Identity (The Editorial Anchor) -->
+<div class="space-y-4">
+<h1 class="font-headline font-extrabold text-5xl md:text-7xl text-primary tracking-tighter leading-none">
+                    ParkAble
+                </h1>
+<p class="font-body text-lg md:text-xl text-on-surface-variant max-w-xs mx-auto leading-relaxed">
+                    Find parks for every child.
+                </p>
+</div>
+<!-- Warm & Welcoming Visual -->
+<div class="mt-16 w-full max-w-sm">
+<div class="aspect-[4/3] rounded-lg overflow-hidden shadow-2xl relative">
+<img alt="Inclusive playground" class="w-full h-full object-cover" data-alt="Happy diverse group of children playing together on a colorful accessible sunlit playground in a lush green public park" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+</div>
+<!-- Call to Action (Touch-First Philosophy) -->
+<div class="mt-16 w-full max-w-xs space-y-4">
+<button class="w-full h-14 bg-primary text-on-primary font-headline font-bold rounded-full text-lg shadow-xl hover:scale-[1.02] transition-transform active:scale-95 flex items-center justify-center gap-2">
+                    Start Exploring
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<!-- Quick Access Toggle -->
+<div class="flex items-center justify-center gap-3">
+<span class="h-px w-8 bg-outline-variant/30"></span>
+<span class="text-on-surface-variant font-label text-sm">Quick access for all abilities</span>
+<span class="h-px w-8 bg-outline-variant/30"></span>
+</div>
+</div>
+</div>
+<!-- Foreground Texture Element -->
+<div class="absolute bottom-10 left-10 pointer-events-none opacity-40">
+<span class="material-symbols-outlined text-9xl text-primary-fixed-dim select-none">
+                nature_people
+            </span>
+</div>
+</main>
+<!-- Navigation Shell Suppression: As per rules, Splash screens suppress the BottomNavBar/SideNav -->
+<!-- The TopAppBar is also suppressed for focus on the Brand Identity -->
+</body></html>

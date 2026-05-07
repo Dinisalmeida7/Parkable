@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#cd8f00",
+                    "primary-fixed-dim": "#88d982",
+                    "on-secondary-fixed": "#001c3a",
+                    "secondary-container": "#54a0fe",
+                    "on-background": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "outline-variant": "#becab9",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#1b6d24",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#a3f69c",
+                    "on-surface-variant": "#3f4a3c",
+                    "surface-container-low": "#f3f3f3",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#88d982",
+                    "on-secondary-container": "#003567",
+                    "surface-bright": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#281900",
+                    "on-primary-fixed": "#002204",
+                    "surface-tint": "#1b6d24",
+                    "tertiary": "#7e5700",
+                    "on-secondary-fixed-variant": "#004786",
+                    "on-primary-container": "#003c0a",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary-fixed-dim": "#a5c8ff",
+                    "tertiary-fixed": "#ffdeac",
+                    "background": "#f9f9f9",
+                    "primary-container": "#5dac5b",
+                    "surface": "#f9f9f9",
+                    "outline": "#6f7a6b",
+                    "secondary": "#005faf",
+                    "secondary-fixed": "#d4e3ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-tertiary-container": "#462e00",
+                    "inverse-on-surface": "#f1f1f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-green-800 dark:text-green-500" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-green-800 dark:text-green-500 font-extrabold tracking-tighter text-lg">ParkAble</h1>
+</div>
+<button class="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-green-800 dark:text-green-500" data-icon="settings_accessibility">settings_accessibility</span>
+</button>
+</header>
+<main class="pt-24 px-6 max-w-4xl mx-auto">
+<!-- Header Section -->
+<section class="mb-8 ml-2">
+<h2 class="text-headline-lg text-3xl font-extrabold tracking-tight mb-2">Saved Places</h2>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center justify-center px-3 py-1 bg-primary-container/20 text-primary font-semibold rounded-full text-sm">
+                    You have 4 saved parks
+                </span>
+</div>
+</section>
+<!-- Bento Grid Style Content -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Park Card 1 -->
+<div class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)]">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Lush green city park" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="wide shot of a sun-drenched urban park with ancient oak trees, winding paved accessible paths, and vibrant green grass" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface">Cedar Ridge Reserve</h3>
+<div class="flex items-center bg-secondary-container/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-sm mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-secondary">4.8</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Level terrain with sensory gardens and fully paved loop trails. Perfect for afternoon strolls.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="wheelchair_pickup">wheelchair_pickup</span> Fully Accessible
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="park">park</span> 2.4 mi
+                        </span>
+</div>
+</div>
+</div>
+<!-- Park Card 2 -->
+<div class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)]">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Botanical garden with paths" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="meticulously landscaped botanical garden with wide smooth walkways and colorful flower beds under soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface">Harborview Gardens</h3>
+<div class="flex items-center bg-secondary-container/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-sm mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-secondary">4.9</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Tactile maps and audio guides available at the North Entrance. Wide ocean views.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-tertiary-container/10 rounded-full text-[11px] font-medium text-tertiary flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="visibility">visibility</span> Low Vision Friendly
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="park">park</span> 5.1 mi
+                        </span>
+</div>
+</div>
+</div>
+<!-- Park Card 3 -->
+<div class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)]">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Lakeside park at sunset" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="peaceful lakeside park with wooden boardwalks over clear water during a golden sunset with misty mountains in distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface">Echo Lake Trail</h3>
+<div class="flex items-center bg-secondary-container/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-sm mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-secondary">4.6</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Elevated boardwalks with protective railings. Rest areas every 200 meters.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="accessible_forward">accessible_forward</span> High Support
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="park">park</span> 12.8 mi
+                        </span>
+</div>
+</div>
+</div>
+<!-- Park Card 4 -->
+<div class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)]">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Quiet woodland path" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="shaded woodland path with smooth packed gravel and wooden benches spaced along the trail in soft dappled sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxIDhzXt1p0Xykvx3ziMlV-4sMFmkXdUdI7_7wofSeqnJZV7XscIDDu7fLnVgNhBSkJbItcRGsmv4nt_HCi6xCyq99Zf0o7PjGETg8UQIeyExY9e_x1owzp60r05FH0aN9Vr_AQG71DDag03QLKkOsVDGsXhT528prMuZCpGT-7QmfRlwcWro3G36HAvSM8zMm6O5Q0fKvWx8Go-nzieBwfHwZyLKn2UlSkfV-oJL0Y9bTvMi8VmboJO2ooWVVC2D5APVHd1riSK4"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface">Whispering Woods</h3>
+<div class="flex items-center bg-secondary-container/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-sm mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-secondary">4.7</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Braille signage on all plant labels. Calm, low-noise environment for neurodivergent visitors.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-tertiary-container/10 rounded-full text-[11px] font-medium text-tertiary flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="hearing">hearing</span> Quiet Zones
+                        </span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-medium text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="park">park</span> 8.4 mi
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl">
+<div class="flex justify-around items-center w-full max-w-lg mx-auto bg-white/40 dark:bg-zinc-800/40 rounded-3xl p-2 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.06)]">
+<!-- Map -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Map</span>
+</a>
+<!-- Search -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Search</span>
+</a>
+<!-- Saved (Active) -->
+<a class="flex flex-col items-center justify-center bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-2xl px-6 py-2 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Saved</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-6 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-[11px]">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>
