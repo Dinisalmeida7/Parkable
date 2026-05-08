@@ -39,6 +39,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "extra": {
+      "googleDirectionsApiKey": "AIzaSyAAvwp36UybUmhyWdZg7MewkT6Pv-UEJkM"
+    },
     "plugins": [
       "expo-localization",
       "expo-font"

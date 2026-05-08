@@ -9,103 +9,336 @@ import {
   Text,
   View,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { applyParkFilters, getParks } from '../data';
 import { useTheme } from '../theme';
 import { useTranslation } from '../i18n';
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={region}
+        key={`${region.latitude}-${region.longitude}`}
+        showsUserLocation
+        showsMyLocationButton
+      >
+        {parksList.map((park) => (
+          <Marker
+            key={park.id}
+            coordinate={{ latitude: park.coords.lat, longitude: park.coords.lng }}
+            title={park.name}
+            description={park.address}
+            onPress={() => navigation.navigate('ParkDetails', { parkId: park.id })}
+          />
+        ))}
+        {routePath.length > 0 && (
+          <Polyline coordinates={routePath} strokeColor={colors.primary} strokeWidth={5} />
+        )}
+      </MapView>
 
-const toRadians = (value) => (value * Math.PI) / 180;
-const haversineDistanceKm = (from, to) => {
-  if (!from || !to) {
-    return null;
-  }
+      <View style={styles.header}>
+        <Pressable
+          onPress={routeActive ? handleExitRoute : handleBack}
+          style={({ pressed }) => [
+            styles.headerButton,
+            { opacity: pressed ? 0.6 : 1 },
+          ]}
+        >
+          <Text style={[styles.headerIcon, { color: colors.primary }]}>‹</Text>
+        </Pressable>
+        {!routeActive ? (
+          <Text style={[styles.headerTitle, { color: colors.primary }]}>ParkAble</Text>
+        ) : (
+          <View style={styles.headerSpacer} />
+        )}
+        <View style={styles.headerSpacer} />
+      </View>
 
-  const earthRadius = 6371;
-  const deltaLat = toRadians(to.lat - from.lat);
-  const deltaLng = toRadians(to.lng - from.lng);
-  const originLat = toRadians(from.lat);
-  const targetLat = toRadians(to.lat);
+      {!routeActive && (
+        <View style={styles.topOverlay}>
+          {locationDenied && (
+            <Text style={[styles.locationNote, { color: colors.muted }]}>
+              {t('screens.map.locationDenied')}
+            </Text>
+          )}
+          <Pressable
+            onPress={openSearch}
+            style={({ pressed }) => [
+              styles.searchBar,
+              {
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                opacity: pressed ? 0.9 : 1,
+              },
+            ]}
+          >
+            <Text style={[styles.searchIcon, { color: colors.muted }]}>🔍</Text>
+            <Text style={[styles.searchText, { color: colors.muted }]}>
+              {t('screens.map.searchPlaceholder')}
+            </Text>
+            <View style={[styles.searchDivider, { backgroundColor: colors.border }]} />
+            <Text style={[styles.searchAction, { color: colors.accent }]}>🎤</Text>
+          </Pressable>
 
-  const a =
-    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(originLat) * Math.cos(targetLat) *
-      Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          <View style={styles.quickRow}>
+            {quickFilters.map((item, index) => (
+              <View
+                key={item.key}
+                style={[
+                  styles.quickChip,
+                  {
+                    backgroundColor: index === 0 ? colors.accent : colors.card,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: index === 0 ? colors.text : colors.muted,
+                    fontWeight: '700',
+                  }}
+                >
+                  {item.label}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
-  return earthRadius * c;
-};
+      <Animated.View
+        style={[
+          styles.bottomSheet,
+          { backgroundColor: colors.card, transform: [{ translateY: sheetTranslateY }] },
+        ]}
+      >
+        <View {...panResponder.panHandlers}>
+          <View style={[styles.sheetHandle, { backgroundColor: colors.border }]} />
+          <View style={styles.sheetHeader}>
+            <View>
+              <Text style={[styles.sheetTitle, { color: colors.primary }]}>
+                {routeActive && selectedPark
+                  ? t('screens.map.routeTitle', { name: selectedPark.name })
+                  : 'Nearby Parks'}
+              </Text>
+              <Text style={[styles.sheetSubtitle, { color: colors.muted }]}>
+                {routeActive && routeDetails
+                  ? `${t('screens.map.routeSummaryDistance')}: ${routeDetails.distance || '--'} • ${t('screens.map.routeSummaryDuration')}: ${routeDetails.duration || '--'}`
+                  : t('screens.map.nearbySubtitle', {
+                      count: topParks.length,
+                      radius: userLocation ? '2' : '-',
+                    })}
+              </Text>
+            </View>
+            {!routeActive && (
+              <Pressable onPress={openSearch}>
+                <Text style={[styles.viewAll, { color: colors.accent }]}>View All</Text>
+              </Pressable>
+            )}
+          </View>
+        </View>
 
-export default function MapScreen() {
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-  const navigation = useNavigation();
-  const [userLocation, setUserLocation] = useState(null);
-  const [locationDenied, setLocationDenied] = useState(false);
-  const sheetTranslateY = useRef(new Animated.Value(0)).current;
-  const sheetOffset = useRef(0);
-  const sheetHeight = useMemo(() => Math.round(Dimensions.get('window').height * 0.48), []);
-  const sheetPeek = 85;
-  const maxSheetTranslate = Math.max(0, sheetHeight - sheetPeek);
-
-  const parksList = useMemo(() => getParks(), []);
-  const topParks = useMemo(
-    () => applyParkFilters({ parksList, sort: 'accessibility' }).slice(0, 3),
-    [parksList]
+        {routeActive ? (
+          <View style={styles.routeHud}>
+            <View style={styles.routeModes}>
+              {[
+                { key: 'driving', label: t('screens.map.routeDrive') },
+                { key: 'walking', label: t('screens.map.routeWalk') },
+                { key: 'transit', label: t('screens.map.routeTransit') },
+              ].map((option) => (
+                <Pressable
+                  key={option.key}
+                  onPress={() => setRouteMode(option.key)}
+                  style={({ pressed }) => [
+                    styles.routeChip,
+                    {
+                      backgroundColor:
+                        routeMode === option.key ? colors.primary : colors.card,
+                      borderColor: colors.border,
+                      opacity: pressed ? 0.85 : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: routeMode === option.key ? colors.card : colors.text,
+                      fontWeight: '700',
+                      fontSize: 12,
+                    }}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            {routeLoading && (
+              <Text style={[styles.routeNote, { color: colors.muted }]}>
+                {t('screens.map.routeLoading')}
+              </Text>
+            )}
+            {!!routeError && !routeLoading && (
+              <Text style={[styles.routeNote, { color: colors.muted }]}>
+                {routeError}
+              </Text>
+            )}
+            {!routeLoading && !routeError && (
+              <>
+                <Text style={[styles.stepsTitle, { color: colors.text }]}>
+                  {routeMode === 'transit'
+                    ? t('screens.map.routeTransitTitle')
+                    : t('screens.map.routeStepsTitle')}
+                </Text>
+                {routeMode === 'transit' ? (
+                  routeDetails?.transitSteps?.length ? (
+                    routeDetails.transitSteps.map((step) => (
+                      <View key={step.id} style={styles.stepRow}>
+                        <Text style={[styles.stepText, { color: colors.text }]}>
+                          {step.label}
+                        </Text>
+                        <Text style={[styles.stepMeta, { color: colors.muted }]}>
+                          {step.from} → {step.to}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={[styles.stepMeta, { color: colors.muted }]}>
+                      {t('screens.map.routeTransitEmpty')}
+                    </Text>
+                  )
+                ) : (
+                  routeDetails?.steps?.map((step) => (
+                    <View key={step.id} style={styles.stepRow}>
+                      <Text style={[styles.stepText, { color: colors.text }]}>
+                        {step.text || t('screens.map.routeStepsTitle')}
+                      </Text>
+                      {(step.distance || step.duration) && (
+                        <Text style={[styles.stepMeta, { color: colors.muted }]}>
+                          {step.distance || '--'} • {step.duration || '--'}
+                        </Text>
+                      )}
+                    </View>
+                  ))
+                )}
+              </>
+            )}
+          </View>
+        ) : (
+          <FlatList
+            data={topParks}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.cardsRow}
+            renderItem={({ item }) => {
+              const distance = userLocation
+                ? haversineDistanceKm(userLocation, item.coords)
+                : null;
+              return (
+                <Pressable
+                  onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
+                  style={({ pressed }) => [
+                    styles.parkCard,
+                    {
+                      backgroundColor: colors.background,
+                      borderColor: colors.border,
+                      opacity: pressed ? 0.95 : 1,
+                    },
+                  ]}
+                >
+                  <View style={styles.cardImage}>
+                    <View style={[styles.ratingPill, { backgroundColor: colors.card }]}>
+                      <Text style={{ color: colors.accent, fontWeight: '700' }}>★</Text>
+                      <Text style={{ marginLeft: 4, color: colors.text, fontWeight: '700' }}>
+                        {item.communitySummary?.rating?.toFixed(1) ?? item.accessibilityScore.toFixed(1)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <View style={styles.cardRow}>
+                      <Text style={[styles.cardTitle, { color: colors.text }]}>{item.name}</Text>
+                      <View style={[styles.distancePill, { backgroundColor: colors.border }]}>
+                        <Text style={{ color: colors.primary, fontWeight: '700' }}>
+                          {distance ? `${distance.toFixed(1)} km` : '--'}
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={[styles.cardSubtitle, { color: colors.muted }]}>
+                      {item.address}
+                    </Text>
+                  </View>
+                </Pressable>
+              );
+            }}
+          />
+        )}
+      </Animated.View>
+    </View>
   );
-
-  const quickFilters = useMemo(
-    () => [
-      { key: 'cadeira de rodas', label: t('screens.map.quickWheelchair') },
-      { key: 'tátil', label: t('screens.map.quickTactile') },
-    ],
-    [t]
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadLocation = async () => {
-      try {
-        const servicesEnabled = await Location.hasServicesEnabledAsync();
-        if (!servicesEnabled) {
-          if (isMounted) {
-            setLocationDenied(true);
-          }
+          setRoutePath([]);
+          setRouteDetails(null);
+          setRouteError(t('screens.map.routeError'));
           return;
         }
-
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          if (isMounted) {
-            setLocationDenied(true);
-          }
-          return;
-        }
-
-        const current = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+        const steps = leg?.steps ?? [];
+        const stepSummaries = steps.map((step, index) => {
+          const text = stripHtml(step.html_instructions || step.instructions || '');
+          return {
+            id: `${index}-${step.travel_mode}`,
+            text,
+            distance: step.distance?.text,
+            duration: step.duration?.text,
+            mode: step.travel_mode,
+            transit: step.transit_details ?? null,
+          };
         });
-        if (isMounted) {
-          setUserLocation({
-            lat: current.coords.latitude,
-            lng: current.coords.longitude,
+        const transitSteps = stepSummaries
+          .filter((step) => step.mode === 'TRANSIT' && step.transit)
+          .map((step) => {
+            const line = step.transit.line?.short_name || step.transit.line?.name || '';
+            const vehicle = step.transit.line?.vehicle?.type || 'TRANSIT';
+            const from = step.transit.departure_stop?.name || '';
+            const to = step.transit.arrival_stop?.name || '';
+            return {
+              id: step.id,
+              label: `${vehicle} ${line}`.trim(),
+              from,
+              to,
+            };
           });
-        }
+        const decoded = decodePolyline(encoded);
+        setRoutePath(decoded);
+        setRouteDetails({
+          distance: leg?.distance?.text || '',
+          duration: leg?.duration?.text || '',
+          steps: stepSummaries,
+          transitSteps,
+        });
       } catch (error) {
-        if (isMounted) {
-          setLocationDenied(true);
-        }
+        setRouteError(t('screens.map.routeError'));
+        setRoutePath([]);
+        setRouteDetails(null);
+      } finally {
+        setRouteLoading(false);
       }
     };
 
-    loadLocation();
+    fetchDirections();
+  }, [routeMode, selectedPark, t, userLocation]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  useEffect(() => {
+    if (!routePath.length || !mapRef.current) {
+      return;
+    }
+
+    mapRef.current.fitToCoordinates(routePath, {
+      edgePadding: { top: 140, bottom: 320, left: 80, right: 80 },
+      animated: true,
+    });
+  }, [routePath]);
 
   const region = useMemo(() => {
     if (userLocation) {
@@ -129,10 +362,20 @@ export default function MapScreen() {
     navigation.navigate('Search');
   };
 
+  const routeActive = !!selectedParkId;
+
   const handleBack = () => {
     if (navigation.canGoBack()) {
       navigation.goBack();
     }
+  };
+
+  const handleExitRoute = () => {
+    setSelectedParkId(null);
+    setRoutePath([]);
+    setRouteDetails(null);
+    setRouteError('');
+    navigation.setParams({ parkId: undefined, mode: undefined });
   };
 
   const panResponder = useMemo(
@@ -160,9 +403,12 @@ export default function MapScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         initialRegion={region}
         key={`${region.latitude}-${region.longitude}`}
+        showsUserLocation
+        showsMyLocationButton
       >
         {parksList.map((park) => (
           <Marker
@@ -173,6 +419,9 @@ export default function MapScreen() {
             onPress={() => navigation.navigate('ParkDetails', { parkId: park.id })}
           />
         ))}
+        {routePath.length > 0 && (
+          <Polyline coordinates={routePath} strokeColor={colors.primary} strokeWidth={5} />
+        )}
       </MapView>
 
       <View style={styles.header}>
@@ -237,6 +486,54 @@ export default function MapScreen() {
             </View>
           ))}
         </View>
+        {selectedPark && (
+          <View style={[styles.routePanel, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Text style={[styles.routeTitle, { color: colors.text }]}>
+              {t('screens.map.routeTitle', { name: selectedPark.name })}
+            </Text>
+            <View style={styles.routeModes}>
+              {[
+                { key: 'driving', label: t('screens.map.routeDrive') },
+                { key: 'walking', label: t('screens.map.routeWalk') },
+                { key: 'transit', label: t('screens.map.routeTransit') },
+              ].map((option) => (
+                <Pressable
+                  key={option.key}
+                  onPress={() => setRouteMode(option.key)}
+                  style={({ pressed }) => [
+                    styles.routeChip,
+                    {
+                      backgroundColor:
+                        routeMode === option.key ? colors.primary : colors.card,
+                      borderColor: colors.border,
+                      opacity: pressed ? 0.85 : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: routeMode === option.key ? colors.card : colors.text,
+                      fontWeight: '700',
+                      fontSize: 12,
+                    }}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            {routeLoading && (
+              <Text style={[styles.routeNote, { color: colors.muted }]}>
+                {t('screens.map.routeLoading')}
+              </Text>
+            )}
+            {!!routeError && !routeLoading && (
+              <Text style={[styles.routeNote, { color: colors.muted }]}>
+                {routeError}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
 
       <Animated.View
@@ -263,7 +560,7 @@ export default function MapScreen() {
           </View>
         </View>
         <FlatList
-          data={topParks}
+            <View style={styles.sheetTitle}>
           keyExtractor={(item) => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -398,6 +695,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 18,
     borderWidth: 1,
+  },
+  routeHud: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    gap: 10,
+  },
+  routeModes: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  routeChip: {
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  routeNote: {
+    fontSize: 11,
+  },
+  stepsTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  stepRow: {
+    paddingVertical: 6,
+  },
+  stepText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  stepMeta: {
+    fontSize: 11,
+    marginTop: 2,
   },
   bottomSheet: {
     position: 'absolute',

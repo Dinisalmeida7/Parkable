@@ -8,7 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import {
   addHistoryEntry,
   addRating,
@@ -24,6 +25,27 @@ import { useTranslation } from '../i18n';
 
 const clampScore = (value) => Math.min(5, Math.max(0, value));
 
+const toRadians = (value) => (value * Math.PI) / 180;
+const haversineDistanceKm = (from, to) => {
+  if (!from || !to) {
+    return null;
+  }
+
+  const earthRadius = 6371;
+  const deltaLat = toRadians(to.lat - from.lat);
+  const deltaLng = toRadians(to.lng - from.lng);
+  const originLat = toRadians(from.lat);
+  const targetLat = toRadians(to.lat);
+
+  const a =
+    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+    Math.cos(originLat) * Math.cos(targetLat) *
+      Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return earthRadius * c;
+};
+
 const parseScore = (value) => {
   const normalized = value.replace(',', '.');
   const parsed = Number.parseFloat(normalized);
@@ -36,11 +58,14 @@ const parseScore = (value) => {
 export default function ParkDetailsScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation();
   const route = useRoute();
   const parkId = route.params?.parkId;
   const [park, setPark] = useState(null);
   const [favorite, setFavorite] = useState(false);
   const [ratings, setRatings] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationDenied, setLocationDenied] = useState(false);
   const [overall, setOverall] = useState('');
   const [mobility, setMobility] = useState('');
   const [visual, setVisual] = useState('');
@@ -66,6 +91,50 @@ export default function ParkDetailsScreen() {
   }, [loadDetails]);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadLocation = async () => {
+      try {
+        const servicesEnabled = await Location.hasServicesEnabledAsync();
+        if (!servicesEnabled) {
+          if (isMounted) {
+            setLocationDenied(true);
+          }
+          return;
+        }
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          if (isMounted) {
+            setLocationDenied(true);
+          }
+          return;
+        }
+
+        const current = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        if (isMounted) {
+          setUserLocation({
+            lat: current.coords.latitude,
+            lng: current.coords.longitude,
+          });
+        }
+      } catch (error) {
+        if (isMounted) {
+          setLocationDenied(true);
+        }
+      }
+    };
+
+    loadLocation();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     if (parkId && getParkById(parkId)) {
       addHistoryEntry(parkId);
     }
@@ -78,6 +147,11 @@ export default function ParkDetailsScreen() {
     const sum = ratings.reduce((acc, item) => acc + (item.overall ?? 0), 0);
     return (sum / ratings.length).toFixed(1);
   }, [ratings]);
+
+  const distance = useMemo(
+    () => (userLocation && park ? haversineDistanceKm(userLocation, park.coords) : null),
+    [park, userLocation]
+  );
 
   const handleToggleFavorite = async () => {
     if (!parkId) {
@@ -118,6 +192,17 @@ export default function ParkDetailsScreen() {
     await loadDetails();
   };
 
+  const handleDirections = () => {
+    if (!parkId) {
+      return;
+    }
+
+    navigation.navigate('Tabs', {
+      screen: 'Map',
+      params: { parkId, mode: 'driving' },
+    });
+  };
+
   const features = useMemo(
     () =>
       EQUIPMENT.map((item) => ({
@@ -155,12 +240,36 @@ export default function ParkDetailsScreen() {
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>{park.name}</Text>
         <Text style={[styles.subtitle, { color: colors.muted }]}>{park.address}</Text>
+        <View style={styles.metaRow}>
+          <Text style={[styles.meta, { color: colors.muted }]}>
+            {t('screens.parkDetails.distanceLabel')}: {distance ? `${distance.toFixed(1)} km` : '--'}
+          </Text>
+          <Pressable
+            onPress={handleDirections}
+            style={({ pressed }) => [
+              styles.directionsButton,
+              {
+                backgroundColor: colors.primary,
+                opacity: pressed ? 0.85 : 1,
+              },
+            ]}
+          >
+            <Text style={[styles.directionsText, { color: colors.card }]}>
+              {t('screens.parkDetails.directions')}
+            </Text>
+          </Pressable>
+        </View>
         <Text style={[styles.meta, { color: colors.muted }]}>
           {t('screens.parkDetails.city')}: {park.city}
         </Text>
         <Text style={[styles.meta, { color: colors.muted }]}>
           {t('screens.parkDetails.lastUpdated')}: {park.lastUpdated}
         </Text>
+        {locationDenied && (
+          <Text style={[styles.meta, { color: colors.muted }]}>
+            {t('screens.search.locationDenied')}
+          </Text>
+        )}
       </View>
 
       <View style={styles.section}>
@@ -413,9 +522,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 6,
   },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 6,
+    gap: 12,
+  },
   meta: {
     fontSize: 12,
     marginTop: 4,
+  },
+  directionsButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  directionsText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   section: {
     marginTop: 18,
