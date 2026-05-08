@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as Localization from 'expo-localization';
 import { I18n } from 'i18n-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const LOCALE_STORAGE_KEY = '@parkable/locale';
 
 const translations = {
   pt: {
@@ -283,13 +286,30 @@ export function LanguageProvider({ children, initialLocale }) {
   const [locale, setLocale] = useState(initialLocale ?? getDeviceLocale());
 
   useEffect(() => {
+    const loadLocale = async () => {
+      const storedLocale = await AsyncStorage.getItem(LOCALE_STORAGE_KEY);
+      if (storedLocale === 'pt' || storedLocale === 'en') {
+        setLocale(storedLocale);
+      }
+    };
+
+    loadLocale();
+  }, []);
+
+  useEffect(() => {
     i18n.locale = locale;
   }, [locale]);
+
+  const updateLocale = async (nextLocale) => {
+    const normalizedLocale = nextLocale === 'en' ? 'en' : 'pt';
+    setLocale(normalizedLocale);
+    await AsyncStorage.setItem(LOCALE_STORAGE_KEY, normalizedLocale);
+  };
 
   const value = useMemo(
     () => ({
       locale,
-      setLocale,
+      setLocale: updateLocale,
       t: (key, options) => i18n.t(key, options),
     }),
     [locale]

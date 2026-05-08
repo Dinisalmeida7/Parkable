@@ -4,10 +4,10 @@
     "slug": "parkable",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/brand-icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/brand-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -31,13 +31,13 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/brand-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.parkable"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/brand-icon.png"
     },
     "extra": {
       "googleDirectionsApiKey": "AIzaSyAAvwp36UybUmhyWdZg7MewkT6Pv-UEJkM"

@@ -6,17 +6,17 @@ import { getFavorites, getParkById, NEEDS } from '../data';
 import { useSession } from '../session';
 
 const UI = {
-  background: '#FFFFFF',
-  surface: '#FFFFFF',
-  field: '#F3F3F3',
-  text: '#082D18',
-  muted: '#6E7482',
-  primary: '#1B6D24',
-  primaryBright: '#39B54A',
-  primarySoft: '#EEF8EA',
-  border: '#E6EDE4',
-  shadow: '#0B1F13',
-  error: '#BA1A1A',
+  background: '#0E141B',
+  surface: '#18212B',
+  field: '#24303C',
+  text: '#F7F9FB',
+  muted: '#D7DED2',
+  primary: '#38C88A',
+  primaryBright: '#38C88A',
+  primarySoft: '#123B24',
+  border: '#24303C',
+  shadow: '#000000',
+  error: '#FFB4AB',
 };
 
 const NEED_META = {
@@ -61,6 +61,16 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.container}>
+      <Pressable
+        onPress={() => navigation.navigate('Settings')}
+        accessibilityRole="button"
+        accessibilityLabel="Abrir definicoes"
+        accessibilityHint="Abre o menu de definicoes da conta."
+        style={({ pressed }) => [styles.settingsButton, { opacity: pressed ? 0.82 : 1 }]}
+      >
+        <Ionicons name="settings-outline" size={24} color={UI.primary} />
+      </Pressable>
+
       <Text style={styles.title}>Perfil</Text>
 
       <Text style={styles.sectionLabel}>Nome</Text>
@@ -153,12 +163,27 @@ const styles = StyleSheet.create({
     paddingTop: 52,
     paddingBottom: 120,
   },
+  settingsButton: {
+    position: 'absolute',
+    top: 50,
+    right: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
+  },
   title: {
     color: UI.text,
     fontSize: 40,
     lineHeight: 48,
     fontWeight: '900',
     marginBottom: 36,
+    paddingRight: 58,
   },
   sectionLabel: {
     color: UI.text,
@@ -204,7 +229,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     backgroundColor: UI.primarySoft,
     borderWidth: 1,
-    borderColor: '#D9ECD2',
+    borderColor: '#1F5A39',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -215,7 +240,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   savedCount: {
-    color: '#9AA1AE',
+    color: UI.muted,
     fontSize: 18,
     fontWeight: '700',
     marginLeft: 14,
@@ -234,7 +259,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 18,
     shadowColor: UI.shadow,
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.22,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 5 },
     elevation: 2,
@@ -281,7 +306,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#FFDAD6',
+    backgroundColor: '#4F1512',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

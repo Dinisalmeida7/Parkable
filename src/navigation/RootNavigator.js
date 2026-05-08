@@ -6,6 +6,7 @@ import MapScreen from '../screens/MapScreen';
 import SearchScreen from '../screens/SearchScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import ParkDetailsScreen from '../screens/ParkDetailsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -104,6 +105,14 @@ export function RootNavigator() {
             name="ParkDetails"
             component={ParkDetailsScreen}
             options={{ title: t('screens.parkDetails.title') }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}
           />
         </>
       )}

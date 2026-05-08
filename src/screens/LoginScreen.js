@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSession } from '../session';
 
+const brandIcon = require('../../assets/brand-icon.png');
+
 const UI = {
-  background: '#F9F9F9',
-  surface: '#FFFFFF',
-  surfaceHigh: '#E8E8E8',
-  text: '#1A1C1C',
-  muted: '#3F4A3C',
-  primary: '#1B6D24',
-  primarySoft: '#DFF6DC',
-  secondary: '#005FAF',
-  border: '#EEEEEE',
+  background: '#0E141B',
+  surface: '#18212B',
+  surfaceHigh: '#24303C',
+  text: '#F7F9FB',
+  muted: '#D7DED2',
+  primary: '#38C88A',
+  primarySoft: '#123B24',
+  secondary: '#A5C8FF',
+  border: '#24303C',
 };
 
 export default function LoginScreen({ navigation }) {
@@ -98,7 +100,7 @@ export default function LoginScreen({ navigation }) {
 
       <View style={styles.brand}>
         <View style={styles.logoBox}>
-          <Ionicons name="leaf" size={44} color={UI.primary} />
+          <Image source={brandIcon} style={styles.logoImage} resizeMode="contain" />
         </View>
         <Text style={styles.brandTitle}>ParkAble</Text>
         <Text style={styles.brandSubtitle}>Natureza acessível para todas as pessoas.</Text>
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     height: 360,
     borderRadius: 180,
     backgroundColor: '#D4E3FF',
-    opacity: 0.35,
+    opacity: 0.12,
   },
   brand: {
     alignItems: 'center',
@@ -227,6 +229,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
     elevation: 2,
   },
+  logoImage: {
+    width: 76,
+    height: 76,
+  },
   brandTitle: {
     fontSize: 38,
     fontWeight: '900',
@@ -241,13 +247,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.94)',
+    backgroundColor: 'rgba(24,33,43,0.96)',
     borderRadius: 30,
     padding: 28,
     borderWidth: 1,
     borderColor: UI.border,
     shadowColor: '#000',
-    shadowOpacity: 0.07,
+    shadowOpacity: 0.22,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 14 },
     elevation: 3,
@@ -354,7 +360,7 @@ const styles = StyleSheet.create({
   topBar: {
     height: 68,
     paddingHorizontal: 20,
-    backgroundColor: UI.surface,
+    backgroundColor: 'rgba(24,33,43,0.96)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

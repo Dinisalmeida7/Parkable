@@ -1,20 +1,22 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NEEDS } from '../data';
 import { useSession } from '../session';
 
+const brandIcon = require('../../assets/brand-icon.png');
+
 const UI = {
-  background: '#F9F9F9',
-  surface: '#FFFFFF',
-  surfaceHigh: '#E8E8E8',
-  text: '#1A1C1C',
-  muted: '#3F4A3C',
-  primary: '#1B6D24',
-  primaryContainer: '#5DAC5B',
-  secondary: '#005FAF',
-  tertiary: '#CD8F00',
-  border: '#EEEEEE',
+  background: '#0E141B',
+  surface: '#18212B',
+  surfaceHigh: '#24303C',
+  text: '#F7F9FB',
+  muted: '#D7DED2',
+  primary: '#38C88A',
+  primaryContainer: '#2F8F5F',
+  secondary: '#A5C8FF',
+  tertiary: '#FFC86B',
+  border: '#24303C',
 };
 
 const NEED_META = {
@@ -114,7 +116,7 @@ export default function RegisterScreen({ navigation }) {
           <>
             <View style={styles.hero}>
               <View style={styles.logoBox}>
-                <Ionicons name="leaf" size={38} color={UI.primary} />
+                <Image source={brandIcon} style={styles.logoImage} resizeMode="contain" />
               </View>
               <Text style={styles.title}>Cria a tua conta</Text>
               <Text style={styles.subtitle}>
@@ -170,7 +172,7 @@ export default function RegisterScreen({ navigation }) {
           <>
             <View style={styles.hero}>
               <View style={styles.logoBox}>
-                <Ionicons name="leaf" size={38} color={UI.primary} />
+                <Image source={brandIcon} style={styles.logoImage} resizeMode="contain" />
               </View>
               <Text style={styles.title}>Vamos preparar a tua experiencia</Text>
               <Text style={styles.subtitle}>
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
   topBar: {
     height: 68,
     paddingHorizontal: 20,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(24,33,43,0.96)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -309,6 +311,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 18,
+  },
+  logoImage: {
+    width: 62,
+    height: 62,
   },
   title: {
     color: UI.text,
@@ -439,7 +445,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     padding: 24,
-    backgroundColor: 'rgba(255,255,255,0.86)',
+    backgroundColor: 'rgba(14,20,27,0.9)',
   },
   cta: {
     height: 56,

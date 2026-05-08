@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const THEME_STORAGE_KEY = '@parkable/theme-mode';
 
 const palettes = {
   light: {
@@ -37,14 +40,49 @@ const palettes = {
 };
 
 const ThemeContext = createContext({
-  scheme: 'light',
+  scheme: 'dark',
   colors: palettes.light,
+  isDark: true,
+  setColorMode: async () => {},
+  toggleColorMode: async () => {},
 });
 
 export function ThemeProvider({ children }) {
   const systemScheme = useColorScheme();
-  const scheme = systemScheme === 'dark' ? 'dark' : 'light';
-  const theme = useMemo(() => ({ scheme, colors: palettes[scheme] }), [scheme]);
+  const [mode, setMode] = useState(null);
+
+  useEffect(() => {
+    const loadThemeMode = async () => {
+      const storedMode = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+      setMode(storedMode === 'light' || storedMode === 'dark' ? storedMode : 'dark');
+    };
+
+    loadThemeMode();
+  }, []);
+
+  const scheme = mode || 'dark';
+  const isDark = scheme === 'dark';
+
+  const setColorMode = async (nextMode) => {
+    const normalizedMode = nextMode === 'light' ? 'light' : 'dark';
+    setMode(normalizedMode);
+    await AsyncStorage.setItem(THEME_STORAGE_KEY, normalizedMode);
+  };
+
+  const toggleColorMode = async () => {
+    await setColorMode(isDark ? 'light' : 'dark');
+  };
+
+  const theme = useMemo(
+    () => ({
+      scheme,
+      colors: palettes[scheme],
+      isDark,
+      setColorMode,
+      toggleColorMode,
+    }),
+    [scheme, isDark]
+  );
 
   return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
 }

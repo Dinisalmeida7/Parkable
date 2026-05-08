@@ -7,15 +7,15 @@ import { getFavorites, getParkById, removeFavorite } from '../data';
 import { useTranslation } from '../i18n';
 
 const UI = {
-  background: '#F9F9F9',
-  surface: '#FFFFFF',
-  surfaceHigh: '#E8E8E8',
-  text: '#1A1C1C',
-  muted: '#3F4A3C',
-  primary: '#1B6D24',
-  primarySoft: '#DFF3E7',
-  secondary: '#005FAF',
-  tertiary: '#CD8F00',
+  background: '#0E141B',
+  surface: '#18212B',
+  surfaceHigh: '#24303C',
+  text: '#F7F9FB',
+  muted: '#D7DED2',
+  primary: '#38C88A',
+  primarySoft: '#123B24',
+  secondary: '#A5C8FF',
+  tertiary: '#FFC86B',
 };
 
 const toRadians = (value) => (value * Math.PI) / 180;
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   topBar: {
     height: 68,
     paddingHorizontal: 20,
-    backgroundColor: 'rgba(255,255,255,0.86)',
+    backgroundColor: 'rgba(14,20,27,0.9)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: UI.surface,
     shadowColor: '#000',
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.22,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 12 },
     elevation: 3,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(24,33,43,0.92)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     borderRadius: 14,
-    backgroundColor: '#EDF5FF',
+    backgroundColor: '#17304F',
     paddingHorizontal: 8,
     paddingVertical: 5,
   },

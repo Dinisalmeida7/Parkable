@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from '../i18n';
+
+const brandIcon = require('../../assets/brand-icon.png');
 
 const UI = {
   background: '#F9F9F9',
@@ -17,7 +18,7 @@ export default function LoadingScreen() {
     <View style={styles.container}>
       <View style={styles.glow} />
       <View style={styles.logoBox}>
-        <Ionicons name="leaf" size={42} color={UI.primary} />
+        <Image source={brandIcon} style={styles.logoImage} resizeMode="contain" />
       </View>
       <Text style={styles.title}>ParkAble</Text>
       <ActivityIndicator size="large" color={UI.primary} style={styles.loader} />
@@ -55,6 +56,10 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 10 },
     elevation: 2,
+  },
+  logoImage: {
+    width: 74,
+    height: 74,
   },
   title: {
     marginTop: 18,
