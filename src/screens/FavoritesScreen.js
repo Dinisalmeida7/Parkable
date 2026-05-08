@@ -1,9 +1,21 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getFavorites, getParkById, removeFavorite } from '../data';
-import { useTheme } from '../theme';
 import { useTranslation } from '../i18n';
+
+const UI = {
+  background: '#F9F9F9',
+  surface: '#FFFFFF',
+  surfaceHigh: '#E8E8E8',
+  text: '#1A1C1C',
+  muted: '#3F4A3C',
+  primary: '#1B6D24',
+  primarySoft: '#DFF3E7',
+  secondary: '#005FAF',
+  tertiary: '#CD8F00',
+};
 
 const toRadians = (value) => (value * Math.PI) / 180;
 const haversineDistanceKm = (from, to) => {
@@ -19,19 +31,21 @@ const haversineDistanceKm = (from, to) => {
 
   const a =
     Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(originLat) * Math.cos(targetLat) *
-      Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+    Math.cos(originLat) *
+      Math.cos(targetLat) *
+      Math.sin(deltaLng / 2) *
+      Math.sin(deltaLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return earthRadius * c;
 };
 
 const coverPalettes = [
-  ['#8fd3c8', '#2ea86f'],
-  ['#98c8ff', '#3b74f2'],
-  ['#ffd39a', '#f08a30'],
-  ['#b7e7b9', '#3bb07a'],
-  ['#f7b7b2', '#de5c5c'],
+  ['#B9E8BC', '#1B6D24'],
+  ['#D4E3FF', '#005FAF'],
+  ['#FFDEAC', '#CD8F00'],
+  ['#A3F69C', '#5DAC5B'],
+  ['#F5CBC7', '#BA1A1A'],
 ];
 
 const getCoverColors = (parkId) => {
@@ -40,7 +54,6 @@ const getCoverColors = (parkId) => {
 };
 
 export default function FavoritesScreen() {
-  const { colors } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [favoriteIds, setFavoriteIds] = useState([]);
@@ -49,11 +62,7 @@ export default function FavoritesScreen() {
   const loadFavorites = useCallback(async () => {
     const storedFavorites = await getFavorites();
     const validFavorites = storedFavorites.filter((id) => !!getParkById(id));
-    if (validFavorites.length !== storedFavorites.length) {
-      setFavoriteIds(validFavorites);
-    } else {
-      setFavoriteIds(storedFavorites);
-    }
+    setFavoriteIds(validFavorites);
   }, []);
 
   useFocusEffect(
@@ -79,20 +88,16 @@ export default function FavoritesScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <Pressable
-          onPress={handleBack}
-          style={({ pressed }) => [styles.headerButton, { opacity: pressed ? 0.6 : 1 }]}
-        >
-          <Text style={[styles.headerIcon, { color: colors.primary }]}>‹</Text>
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.primary }]}>ParkAble</Text>
-        <Pressable
-          onPress={() => navigation.navigate('Profile')}
-          style={({ pressed }) => [styles.headerButton, { opacity: pressed ? 0.6 : 1 }]}
-        >
-          <Text style={[styles.headerIcon, { color: colors.primary }]}>👤</Text>
+    <View style={styles.container}>
+      <View style={styles.topBar}>
+        <View style={styles.topLeft}>
+          <Pressable onPress={handleBack} style={styles.iconButton}>
+            <Ionicons name="arrow-back" size={22} color={UI.primary} />
+          </Pressable>
+          <Text style={styles.brand}>ParkAble</Text>
+        </View>
+        <Pressable onPress={() => navigation.navigate('Profile')} style={styles.iconButton}>
+          <Ionicons name="accessibility" size={22} color={UI.primary} />
         </Pressable>
       </View>
 
@@ -102,12 +107,9 @@ export default function FavoritesScreen() {
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.hero}>
-            <Text style={[styles.title, { color: colors.text }]}>
-              {t('screens.favorites.title')}
-            </Text>
-            <View style={[styles.countPill, { backgroundColor: '#DFF3E7' }]}>
-              <Text style={[styles.countText, { color: colors.primary }]}
-              >
+            <Text style={styles.title}>Saved Places</Text>
+            <View style={styles.countPill}>
+              <Text style={styles.countText}>
                 {t('screens.favorites.count', { count: favoriteParks.length })}
               </Text>
             </View>
@@ -117,70 +119,62 @@ export default function FavoritesScreen() {
           const [topColor, bottomColor] = getCoverColors(item.id);
           const rating = item.communitySummary?.rating ?? item.accessibilityScore;
           const distance = haversineDistanceKm(referenceLocation, item.coords);
-          const accessibilityLabel = item.accessibilityScore >= 4.2
-            ? 'Totalmente acessivel'
-            : item.accessibilityScore >= 3.4
-              ? 'Boa acessibilidade'
-              : 'Acesso parcial';
+          const accessibilityLabel =
+            item.accessibilityScore >= 4.2
+              ? 'Totalmente acessivel'
+              : item.accessibilityScore >= 3.4
+                ? 'Boa acessibilidade'
+                : 'Acesso parcial';
 
           return (
-            <View style={[styles.card, { backgroundColor: colors.card }]}>
-              <Pressable
-                onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
-                style={({ pressed }) => [styles.cardPressable, { opacity: pressed ? 0.96 : 1 }]}
-              >
-                <View style={styles.cover}>
-                  <View style={[styles.coverLayer, { backgroundColor: topColor }]} />
-                  <View style={[styles.coverLayer, { backgroundColor: bottomColor, opacity: 0.9 }]} />
-                  <View style={styles.coverOverlay}>
-                    <View style={[styles.ratingPill, { backgroundColor: colors.card }]}>
-                      <Text style={{ color: colors.accent, fontWeight: '700' }}>★</Text>
-                      <Text style={{ marginLeft: 4, color: colors.text, fontWeight: '700' }}>
-                        {rating.toFixed(1)}
-                      </Text>
-                    </View>
-                  </View>
+            <Pressable
+              onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
+              style={({ pressed }) => [styles.card, { opacity: pressed ? 0.96 : 1 }]}
+            >
+              <View style={styles.cover}>
+                <View style={[styles.coverLayer, { backgroundColor: topColor }]} />
+                <View style={[styles.coverLayer, { backgroundColor: bottomColor, opacity: 0.78 }]} />
+                <View style={styles.coverPattern}>
+                  <Ionicons name="leaf-outline" size={92} color="rgba(255,255,255,0.22)" />
                 </View>
+                <Pressable
+                  onPress={() => handleRemove(item.id)}
+                  style={({ pressed }) => [styles.favoriteButton, { opacity: pressed ? 0.8 : 1 }]}
+                >
+                  <Ionicons name="heart" size={20} color={UI.primary} />
+                </Pressable>
+              </View>
 
-                <View style={styles.cardContent}>
-                  <View style={styles.cardRow}>
-                    <Text style={[styles.cardTitle, { color: colors.text }]}>{item.name}</Text>
-                    <Pressable
-                      onPress={() => handleRemove(item.id)}
-                      style={({ pressed }) => [
-                        styles.heartButton,
-                        { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
-                      ]}
-                    >
-                      <Text style={styles.heartIcon}>❤</Text>
-                    </Pressable>
-                  </View>
-                  <Text style={[styles.cardSubtitle, { color: colors.muted }]} numberOfLines={2}>
-                    {item.address}
-                  </Text>
-                  <View style={styles.chipRow}>
-                    <View style={[styles.chip, { backgroundColor: '#F2F4F6' }]}
-                    >
-                      <Text style={[styles.chipText, { color: colors.muted }]}>
-                        {accessibilityLabel}
-                      </Text>
-                    </View>
-                    <View style={[styles.chip, { backgroundColor: '#F2F4F6' }]}>
-                      <Text style={[styles.chipText, { color: colors.muted }]}>
-                        {distance ? `${distance.toFixed(1)} km` : '--'}
-                      </Text>
-                    </View>
+              <View style={styles.cardContent}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>{item.name}</Text>
+                  <View style={styles.ratingBadge}>
+                    <Ionicons name="star" size={13} color={UI.secondary} />
+                    <Text style={styles.ratingText}>{rating.toFixed(1)}</Text>
                   </View>
                 </View>
-              </Pressable>
-            </View>
+                <Text style={styles.cardSubtitle} numberOfLines={2}>
+                  {item.address}
+                </Text>
+                <View style={styles.chipRow}>
+                  <View style={styles.chip}>
+                    <Ionicons name="accessibility-outline" size={14} color={UI.muted} />
+                    <Text style={styles.chipText}>{accessibilityLabel}</Text>
+                  </View>
+                  <View style={styles.chip}>
+                    <Ionicons name="leaf-outline" size={14} color={UI.muted} />
+                    <Text style={styles.chipText}>
+                      {distance ? `${distance.toFixed(1)} km` : '--'}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Pressable>
           );
         }}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={[styles.emptyText, { color: colors.muted }]}>
-              {t('screens.favorites.empty')}
-            </Text>
+            <Text style={styles.emptyText}>{t('screens.favorites.empty')}</Text>
           </View>
         }
       />
@@ -191,71 +185,74 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 6,
+    backgroundColor: UI.background,
   },
-  header: {
+  topBar: {
+    height: 68,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255,255,255,0.86)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingTop: 10,
-    paddingBottom: 12,
   },
-  headerButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  topLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerIcon: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  hero: {
-    paddingHorizontal: 22,
-    paddingTop: 10,
-    paddingBottom: 8,
-  },
-  title: {
-    fontSize: 28,
+  brand: {
+    color: UI.primary,
+    fontSize: 18,
     fontWeight: '800',
   },
+  hero: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 12,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: UI.text,
+  },
   listContent: {
-    paddingBottom: 28,
-    gap: 18,
+    paddingBottom: 120,
+    gap: 20,
   },
   countPill: {
     alignSelf: 'flex-start',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 14,
-    marginTop: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+    marginTop: 10,
+    backgroundColor: UI.primarySoft,
   },
   countText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '800',
+    color: UI.primary,
   },
   card: {
+    marginHorizontal: 24,
     borderRadius: 24,
-    marginHorizontal: 18,
     overflow: 'hidden',
+    backgroundColor: UI.surface,
     shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 2,
-  },
-  cardPressable: {
-    borderRadius: 24,
-    overflow: 'hidden',
+    shadowOpacity: 0.06,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 3,
   },
   cover: {
-    height: 150,
+    height: 176,
+    overflow: 'hidden',
   },
   coverLayer: {
     position: 'absolute',
@@ -264,62 +261,77 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  coverOverlay: {
+  coverPattern: {
     flex: 1,
+    alignItems: 'flex-start',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    padding: 12,
+    padding: 18,
   },
-  ratingPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 14,
-  },
-  cardContent: {
-    padding: 16,
-  },
-  cardRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    flex: 1,
-    marginRight: 10,
-  },
-  cardSubtitle: {
-    fontSize: 12,
-    marginTop: 6,
-    lineHeight: 16,
-  },
-  heartButton: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+  favoriteButton: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: 'rgba(255,255,255,0.9)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  heartIcon: {
-    color: '#fff',
-    fontSize: 16,
+  cardContent: {
+    padding: 20,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  cardTitle: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: '800',
+    color: UI.text,
+  },
+  ratingBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: 14,
+    backgroundColor: '#EDF5FF',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  ratingText: {
+    color: UI.secondary,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  cardSubtitle: {
+    fontSize: 13,
+    marginTop: 8,
+    lineHeight: 18,
+    color: UI.muted,
   },
   chipRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
-    marginTop: 10,
+    marginTop: 16,
   },
   chip: {
-    borderRadius: 12,
-    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    borderRadius: 16,
+    paddingVertical: 6,
     paddingHorizontal: 10,
+    backgroundColor: UI.surfaceHigh,
   },
   chipText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
+    color: UI.muted,
   },
   emptyState: {
     paddingHorizontal: 24,
@@ -329,5 +341,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 24,
     fontSize: 13,
+    color: UI.muted,
   },
 });
