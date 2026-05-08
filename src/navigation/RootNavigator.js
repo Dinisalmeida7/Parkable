@@ -7,7 +7,8 @@ import SearchScreen from '../screens/SearchScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ParkDetailsScreen from '../screens/ParkDetailsScreen';
-import AuthScreen from '../screens/AuthScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import { useTranslation } from '../i18n';
@@ -78,11 +79,18 @@ export function RootNavigator() {
       }}
     >
       {!isAuthenticated ? (
-        <Stack.Screen
-          name="Auth"
-          component={AuthScreen}
-          options={{ title: t('screens.auth.title') }}
-        />
+        <>
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+        </>
       ) : !isOnboarded ? (
         <Stack.Screen
           name="Onboarding"

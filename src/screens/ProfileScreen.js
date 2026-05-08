@@ -1,97 +1,143 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { NEEDS } from '../data';
-import { useTranslation } from '../i18n';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { getFavorites, getParkById, NEEDS } from '../data';
 import { useSession } from '../session';
 
 const UI = {
-  background: '#F9F9F9',
+  background: '#FFFFFF',
   surface: '#FFFFFF',
-  surfaceLow: '#F3F3F3',
-  surfaceHigh: '#E8E8E8',
-  text: '#1A1C1C',
-  muted: '#3F4A3C',
+  field: '#F3F3F3',
+  text: '#082D18',
+  muted: '#6E7482',
   primary: '#1B6D24',
-  primarySoft: '#DFF6DC',
-  secondary: '#005FAF',
-  tertiary: '#CD8F00',
+  primaryBright: '#39B54A',
+  primarySoft: '#EEF8EA',
+  border: '#E6EDE4',
+  shadow: '#0B1F13',
   error: '#BA1A1A',
 };
 
-export default function ProfileScreen() {
-  const { t } = useTranslation();
-  const { signOut, profile, needs } = useSession();
+const NEED_META = {
+  mobility: { icon: 'accessibility-outline', label: 'Mobilidade reduzida' },
+  visual: { icon: 'eye-outline', label: 'Alta visibilidade' },
+  auditory: { icon: 'volume-medium-outline', label: 'Apoio auditivo' },
+  cognitive: { icon: 'leaf-outline', label: 'Zonas calmas' },
+};
 
-  const displayName = profile?.name || t('screens.profile.guest');
+const fallbackNeed = { icon: 'checkmark-circle-outline', label: 'Apoio personalizado' };
+
+export default function ProfileScreen() {
+  const navigation = useNavigation();
+  const { signOut, profile, needs } = useSession();
+  const [favoriteIds, setFavoriteIds] = useState([]);
+
+  const displayName = profile?.name || 'Convidado';
   const selectedNeeds = useMemo(() => NEEDS.filter((item) => needs.includes(item.key)), [needs]);
+  const favoriteParks = useMemo(
+    () => favoriteIds.map((id) => getParkById(id)).filter(Boolean),
+    [favoriteIds]
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadFavorites = async () => {
+        const storedFavorites = await getFavorites();
+        if (isActive) {
+          setFavoriteIds(storedFavorites.filter((id) => !!getParkById(id)));
+        }
+      };
+
+      loadFavorites();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.container}>
-      <View style={styles.topBar}>
-        <Text style={styles.brand}>ParkAble</Text>
-        <View style={styles.iconButton}>
-          <Ionicons name="settings-outline" size={22} color={UI.primary} />
-        </View>
+      <Text style={styles.title}>Perfil</Text>
+
+      <Text style={styles.sectionLabel}>Nome</Text>
+      <View style={styles.nameField} accessible accessibilityRole="text">
+        <Text style={styles.nameText}>{displayName}</Text>
       </View>
 
-      <View style={styles.hero}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{displayName.charAt(0).toUpperCase()}</Text>
-        </View>
-        <View style={styles.heroText}>
-          <Text style={styles.title}>{displayName}</Text>
-          <Text style={styles.subtitle}>{t('screens.profile.subtitle')}</Text>
-        </View>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>As minhas necessidades</Text>
       </View>
 
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <View style={styles.cardIcon}>
-            <Ionicons name="person-outline" size={22} color={UI.primary} />
-          </View>
-          <View>
-            <Text style={styles.cardTitle}>{t('screens.profile.nameLabel')}</Text>
-            <Text style={styles.cardSubtitle}>{displayName}</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <View style={[styles.cardIcon, { backgroundColor: '#EDF5FF' }]}>
-            <Ionicons name="accessibility-outline" size={22} color={UI.secondary} />
-          </View>
-          <View style={styles.flex}>
-            <Text style={styles.cardTitle}>{t('screens.profile.needsLabel')}</Text>
-            <Text style={styles.cardSubtitle}>
-              {selectedNeeds.length
-                ? `${selectedNeeds.length} preferencias ativas`
-                : t('screens.profile.needsEmpty')}
-            </Text>
-          </View>
-        </View>
+      <View style={styles.needRow}>
         {selectedNeeds.length ? (
-          <View style={styles.chipRow}>
-            {selectedNeeds.map((item) => (
-              <View key={item.key} style={styles.chip}>
-                <Ionicons name="checkmark-circle" size={15} color={UI.primary} />
-                <Text style={styles.chipText}>{t(item.labelKey)}</Text>
+          selectedNeeds.map((need) => {
+            const meta = NEED_META[need.key] || fallbackNeed;
+            return (
+              <View key={need.key} style={styles.needChip}>
+                <Ionicons name={meta.icon} size={22} color={UI.primaryBright} />
+                <Text style={styles.needText}>{meta.label}</Text>
               </View>
-            ))}
+            );
+          })
+        ) : (
+          <View style={styles.needChip}>
+            <Ionicons name="add-circle-outline" size={22} color={UI.primaryBright} />
+            <Text style={styles.needText}>Sem necessidades escolhidas</Text>
           </View>
-        ) : null}
+        )}
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Locais guardados</Text>
+        <Text style={styles.savedCount}>
+          {favoriteParks.length} {favoriteParks.length === 1 ? 'guardado' : 'guardados'}
+        </Text>
+      </View>
+
+      <View style={styles.savedList}>
+        {favoriteParks.length ? (
+          favoriteParks.slice(0, 3).map((park) => (
+            <Pressable
+              key={park.id}
+              onPress={() => navigation.navigate('ParkDetails', { parkId: park.id })}
+              accessibilityRole="button"
+              accessibilityLabel={`Abrir ${park.name}`}
+              accessibilityHint="Abre os detalhes deste local guardado."
+              style={({ pressed }) => [styles.savedCard, { opacity: pressed ? 0.86 : 1 }]}
+            >
+              <View style={styles.savedIcon}>
+                <Ionicons name="home" size={28} color={UI.primaryBright} />
+              </View>
+              <View style={styles.savedTextWrap}>
+                <Text style={styles.savedTitle}>{park.name}</Text>
+                <Text style={styles.savedMeta}>
+                  {park.city} - avaliacao {park.accessibilityScore.toFixed(1)}
+                </Text>
+              </View>
+              <Ionicons name="heart" size={30} color={UI.primaryBright} />
+            </Pressable>
+          ))
+        ) : (
+          <View style={styles.emptyCard}>
+            <Ionicons name="heart-outline" size={28} color={UI.primaryBright} />
+            <Text style={styles.emptyText}>Ainda nao tens locais guardados.</Text>
+          </View>
+        )}
       </View>
 
       <Pressable
         onPress={signOut}
         accessibilityRole="button"
-        accessibilityLabel="Sair da sessão"
-        accessibilityHint="Termina a sessão e volta ao ecrã de entrada."
+        accessibilityLabel="Sair da sessao"
+        accessibilityHint="Termina a sessao e volta ao ecra de entrada."
         style={({ pressed }) => [styles.signOut, { opacity: pressed ? 0.85 : 1 }]}
       >
         <Ionicons name="log-out-outline" size={18} color={UI.error} />
-        <Text style={styles.signOutText}>{t('screens.profile.signOut')}</Text>
+        <Text style={styles.signOutText}>Sair da conta</Text>
       </Pressable>
     </ScrollView>
   );
@@ -103,119 +149,138 @@ const styles = StyleSheet.create({
     backgroundColor: UI.background,
   },
   container: {
-    paddingBottom: 110,
-  },
-  topBar: {
-    height: 68,
     paddingHorizontal: 24,
-    backgroundColor: 'rgba(255,255,255,0.86)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brand: {
-    color: UI.primary,
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  hero: {
-    padding: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 24,
-    backgroundColor: UI.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontSize: 28,
-    fontWeight: '800',
-  },
-  heroText: {
-    flex: 1,
+    paddingTop: 52,
+    paddingBottom: 120,
   },
   title: {
     color: UI.text,
-    fontSize: 30,
+    fontSize: 40,
+    lineHeight: 48,
+    fontWeight: '900',
+    marginBottom: 36,
+  },
+  sectionLabel: {
+    color: UI.text,
+    fontSize: 18,
     fontWeight: '800',
+    marginBottom: 12,
   },
-  subtitle: {
-    marginTop: 4,
-    color: UI.muted,
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  card: {
-    marginHorizontal: 24,
-    marginTop: 14,
+  nameField: {
+    minHeight: 76,
     borderRadius: 24,
-    backgroundColor: UI.surface,
-    padding: 20,
+    backgroundColor: UI.field,
+    justifyContent: 'center',
+    paddingHorizontal: 28,
+    marginBottom: 44,
   },
-  cardHeader: {
+  nameText: {
+    color: UI.text,
+    fontSize: 24,
+    fontWeight: '500',
+  },
+  sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    justifyContent: 'space-between',
+    marginBottom: 18,
   },
-  cardIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 16,
+  sectionTitle: {
+    color: UI.text,
+    fontSize: 26,
+    lineHeight: 32,
+    fontWeight: '900',
+    flex: 1,
+  },
+  needRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginBottom: 42,
+  },
+  needChip: {
+    minHeight: 58,
+    borderRadius: 29,
+    paddingHorizontal: 18,
+    backgroundColor: UI.primarySoft,
+    borderWidth: 1,
+    borderColor: '#D9ECD2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  needText: {
+    color: UI.primaryBright,
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  savedCount: {
+    color: '#9AA1AE',
+    fontSize: 18,
+    fontWeight: '700',
+    marginLeft: 14,
+  },
+  savedList: {
+    gap: 16,
+  },
+  savedCard: {
+    minHeight: 112,
+    borderRadius: 24,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+    paddingHorizontal: 22,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18,
+    shadowColor: UI.shadow,
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 2,
+  },
+  savedIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 18,
     backgroundColor: UI.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  flex: {
+  savedTextWrap: {
     flex: 1,
   },
-  cardTitle: {
+  savedTitle: {
     color: UI.text,
+    fontSize: 20,
+    fontWeight: '900',
+  },
+  savedMeta: {
+    marginTop: 4,
+    color: UI.muted,
     fontSize: 15,
-    fontWeight: '800',
+    lineHeight: 20,
+    fontWeight: '600',
   },
-  cardSubtitle: {
-    color: UI.muted,
-    marginTop: 3,
-    fontSize: 12,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 16,
-  },
-  chip: {
-    flexDirection: 'row',
+  emptyCard: {
+    minHeight: 104,
+    borderRadius: 24,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
     alignItems: 'center',
-    gap: 5,
-    backgroundColor: UI.surfaceHigh,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 18,
+    justifyContent: 'center',
+    gap: 8,
   },
-  chipText: {
+  emptyText: {
     color: UI.muted,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
   signOut: {
-    marginHorizontal: 24,
-    marginTop: 24,
-    height: 50,
-    borderRadius: 25,
+    marginTop: 28,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#FFDAD6',
     flexDirection: 'row',
     alignItems: 'center',
