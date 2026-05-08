@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -85,27 +86,6 @@ const getDirectionsApiKey = () =>
   Constants.manifest?.extra?.googleDirectionsApiKey ||
   '';
 
-const getFallbackTransitSteps = (park) => [
-  {
-    id: 'fallback-walk-start',
-    label: 'Andar ate a paragem mais proxima',
-    from: 'Localizacao atual',
-    to: 'Paragem acessivel mais proxima',
-  },
-  {
-    id: 'fallback-transit-main',
-    label: park?.city === 'Porto' ? 'Metro linha A ou autocarro 205' : 'Metro/autocarro acessivel',
-    from: 'Paragem acessivel mais proxima',
-    to: park?.city ? `Centro de ${park.city}` : 'Zona do parque',
-  },
-  {
-    id: 'fallback-walk-end',
-    label: 'Andar ate ao parque',
-    from: park?.city ? `Centro de ${park.city}` : 'Zona do parque',
-    to: park?.name || 'Destino',
-  },
-];
-
 export default function MapScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -123,7 +103,6 @@ export default function MapScreen() {
   const [routeDetails, setRouteDetails] = useState(null);
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState('');
-  const [usedTransitFallback, setUsedTransitFallback] = useState(false);
 
   const sheetHeight = useMemo(() => Math.round(Dimensions.get('window').height * 0.36), []);
   const sheetPeek = 85;
@@ -199,7 +178,6 @@ export default function MapScreen() {
     if (!routeActive || !selectedPark || !userLocation) {
       setRoutePath([]);
       setRouteDetails(null);
-      setUsedTransitFallback(false);
       return;
     }
 
@@ -212,7 +190,6 @@ export default function MapScreen() {
     const fetchDirections = async () => {
       setRouteLoading(true);
       setRouteError('');
-      setUsedTransitFallback(false);
 
       try {
         const origin = `${userLocation.lat},${userLocation.lng}`;
@@ -247,7 +224,7 @@ export default function MapScreen() {
           mode: step.travel_mode,
           transit: step.transit_details ?? null,
         }));
-        let transitSteps = stepSummaries
+        const transitSteps = stepSummaries
           .filter((step) => step.mode === 'TRANSIT' && step.transit)
           .map((step) => {
             const line = step.transit.line?.short_name || step.transit.line?.name || '';
@@ -262,11 +239,6 @@ export default function MapScreen() {
               to,
             };
           });
-
-        if (routeMode === 'transit' && !transitSteps.length) {
-          transitSteps = getFallbackTransitSteps(selectedPark);
-          setUsedTransitFallback(true);
-        }
 
         setRoutePath(decodePolyline(encoded));
         setRouteDetails({
@@ -320,13 +292,42 @@ export default function MapScreen() {
     navigation.navigate('Search');
   };
 
+  const recenterUserLocation = async () => {
+    let nextLocation = userLocation;
+
+    if (!nextLocation) {
+      try {
+        const current = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        nextLocation = {
+          lat: current.coords.latitude,
+          lng: current.coords.longitude,
+        };
+        setUserLocation(nextLocation);
+      } catch (error) {
+        setLocationDenied(true);
+        return;
+      }
+    }
+
+    mapRef.current?.animateToRegion(
+      {
+        latitude: nextLocation.lat,
+        longitude: nextLocation.lng,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      450
+    );
+  };
+
   const handleBack = () => {
     if (routeActive) {
       setSelectedParkId(null);
       setRoutePath([]);
       setRouteDetails(null);
       setRouteError('');
-      setUsedTransitFallback(false);
       navigation.setParams({ parkId: undefined, mode: undefined });
       return;
     }
@@ -369,6 +370,9 @@ export default function MapScreen() {
     return (
       <Pressable
         onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
+        accessibilityRole="button"
+        accessibilityLabel={`Abrir ficha de ${item.name}`}
+        accessibilityHint="Abre detalhes, avaliação, alertas e direções para este parque."
         style={({ pressed }) => [
           styles.parkCard,
           {
@@ -380,7 +384,7 @@ export default function MapScreen() {
       >
         <View style={styles.cardImage}>
           <View style={[styles.ratingPill, { backgroundColor: colors.card }]}>
-            <Text style={{ color: colors.accent, fontWeight: '700' }}>*</Text>
+            <Text style={{ color: colors.accent, fontWeight: '700' }}>★</Text>
             <Text style={{ marginLeft: 4, color: colors.text, fontWeight: '700' }}>
               {item.communitySummary?.rating?.toFixed(1) ?? item.accessibilityScore.toFixed(1)}
             </Text>
@@ -410,6 +414,7 @@ export default function MapScreen() {
         key={`${region.latitude}-${region.longitude}`}
         showsUserLocation
         showsMyLocationButton={!routeActive}
+        accessibilityLabel="Mapa com localização atual e parques acessíveis"
       >
         {parksList.map((park) => (
           <Marker
@@ -418,6 +423,7 @@ export default function MapScreen() {
             title={park.name}
             description={park.address}
             onPress={() => navigation.navigate('ParkDetails', { parkId: park.id })}
+            accessibilityLabel={`Marcador de ${park.name}`}
           />
         ))}
         {routePath.length > 0 && (
@@ -425,9 +431,29 @@ export default function MapScreen() {
         )}
       </MapView>
 
+      <Pressable
+        onPress={recenterUserLocation}
+        accessibilityRole="button"
+        accessibilityLabel="Centrar na minha localização"
+        accessibilityHint="Move o mapa para a tua localização atual."
+        style={({ pressed }) => [
+          styles.recenterButton,
+          {
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+            opacity: pressed ? 0.85 : 1,
+          },
+        ]}
+      >
+        <Ionicons name="locate" size={23} color={colors.primary} />
+      </Pressable>
+
       <View style={[styles.header, routeActive && styles.routeHeader]}>
         <Pressable
           onPress={handleBack}
+          accessibilityRole="button"
+          accessibilityLabel={routeActive ? 'Sair das direções' : 'Voltar'}
+          accessibilityHint="Volta ao ecrã anterior ou sai do modo de direções."
           style={({ pressed }) => [styles.headerButton, { opacity: pressed ? 0.6 : 1 }]}
         >
           <Text style={[styles.headerIcon, { color: colors.primary }]}>{'<'}</Text>
@@ -458,12 +484,12 @@ export default function MapScreen() {
               },
             ]}
           >
-            <Text style={[styles.searchIcon, { color: colors.muted }]}>?</Text>
+            <Text style={[styles.searchIcon, { color: colors.muted }]}>⌕</Text>
             <Text style={[styles.searchText, { color: colors.muted }]}>
               {t('screens.map.searchPlaceholder')}
             </Text>
             <View style={[styles.searchDivider, { backgroundColor: colors.border }]} />
-            <Text style={[styles.searchAction, { color: colors.accent }]}>Mic</Text>
+            <Text style={[styles.searchAction, { color: colors.accent }]}>Voz</Text>
           </Pressable>
 
         </View>
@@ -486,7 +512,7 @@ export default function MapScreen() {
               <Text style={[styles.sheetTitle, { color: colors.primary }]}>
                 {routeActive && selectedPark
                   ? t('screens.map.routeTitle', { name: selectedPark.name })
-                  : 'Nearby Parks'}
+                  : 'Parques próximos'}
               </Text>
               <Text style={[styles.sheetSubtitle, { color: colors.muted }]}>
                 {routeActive && routeDetails
@@ -502,8 +528,13 @@ export default function MapScreen() {
               </Text>
             </View>
             {!routeActive && (
-              <Pressable onPress={openSearch}>
-                <Text style={[styles.viewAll, { color: colors.accent }]}>View All</Text>
+              <Pressable
+                onPress={openSearch}
+                accessibilityRole="button"
+                accessibilityLabel="Ver todos os parques"
+                accessibilityHint="Abre a página de pesquisa e filtros."
+              >
+                <Text style={[styles.viewAll, { color: colors.accent }]}>Ver todos</Text>
               </Pressable>
             )}
           </View>
@@ -522,6 +553,9 @@ export default function MapScreen() {
                   <Pressable
                     key={option.key}
                     onPress={() => handleModeChange(option.key)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Escolher rota por ${option.label}`}
+                    accessibilityHint="Atualiza o caminho e as indicações para este meio de transporte."
                     style={({ pressed }) => [
                       styles.routeChip,
                       {
@@ -553,12 +587,6 @@ export default function MapScreen() {
             {!!routeError && !routeLoading && (
               <Text style={[styles.routeNote, { color: colors.muted }]}>{routeError}</Text>
             )}
-            {usedTransitFallback && !routeLoading && !routeError && (
-              <Text style={[styles.routeNote, { color: colors.muted }]}>
-                A API nao devolveu detalhes de transportes publicos para esta rota. Estou a mostrar
-                uma sugestao plausivel.
-              </Text>
-            )}
             {!routeLoading && !routeError && (
               <>
                 <Text style={[styles.stepsTitle, { color: colors.text }]}>
@@ -578,7 +606,7 @@ export default function MapScreen() {
                     ))
                   ) : (
                     <Text style={[styles.stepMeta, { color: colors.muted }]}>
-                      {t('screens.map.routeTransitEmpty')}
+                      Rota não verificada como acessível. A API não devolveu transportes públicos confirmados para este percurso.
                     </Text>
                   )
                 ) : (
@@ -636,10 +664,27 @@ const styles = StyleSheet.create({
   routeHeader: {
     backgroundColor: 'transparent',
   },
+  recenterButton: {
+    position: 'absolute',
+    right: 18,
+    bottom: 92,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 3,
+  },
   headerButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.9)',
@@ -701,6 +746,8 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+    zIndex: 8,
+    elevation: 8,
   },
   sheetHandle: {
     width: 54,
@@ -747,8 +794,10 @@ const styles = StyleSheet.create({
   routeChip: {
     borderWidth: 1,
     borderRadius: 14,
+    minHeight: 44,
     paddingVertical: 6,
     paddingHorizontal: 10,
+    justifyContent: 'center',
   },
   routeNote: {
     fontSize: 11,

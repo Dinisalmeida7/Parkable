@@ -27,6 +27,7 @@ export default function SearchScreen() {
   const [sort, setSort] = useState('accessibility');
   const [userLocation, setUserLocation] = useState(null);
   const [locationDenied, setLocationDenied] = useState(false);
+  const [filterFeedback, setFilterFeedback] = useState('');
   const filtersTranslateY = useRef(new Animated.Value(0)).current;
   const filtersOffset = useRef(0);
   const filtersHeight = useMemo(() => Math.round(Dimensions.get('window').height * 0.36), []);
@@ -98,12 +99,14 @@ export default function SearchScreen() {
     setSelectedNeeds((prev) =>
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
+    setFilterFeedback('Filtros atualizados');
   };
 
   const toggleEquipment = (key) => {
     setSelectedEquipment((prev) =>
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
+    setFilterFeedback('Filtros atualizados');
   };
 
   const filtersPanResponder = useMemo(
@@ -150,6 +153,8 @@ export default function SearchScreen() {
           placeholder={t('screens.search.searchPlaceholder')}
           placeholderTextColor={colors.muted}
           style={[styles.input, { color: colors.text, borderColor: colors.border }]}
+          accessibilityLabel="Pesquisar parque"
+          accessibilityHint="Escreve o nome de um parque para filtrar a lista."
         />
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
@@ -158,6 +163,9 @@ export default function SearchScreen() {
         <View style={styles.sortRow}>
           <Pressable
             onPress={() => setSort('accessibility')}
+            accessibilityRole="button"
+            accessibilityLabel="Ordenar por acessibilidade"
+            accessibilityHint="Mostra primeiro os parques com melhor acessibilidade."
             style={({ pressed }) => [
               styles.sortChip,
               {
@@ -173,6 +181,9 @@ export default function SearchScreen() {
           </Pressable>
           <Pressable
             onPress={() => setSort('distance')}
+            accessibilityRole="button"
+            accessibilityLabel="Ordenar por distância"
+            accessibilityHint="Mostra primeiro os parques mais próximos se a localização estiver ativa."
             style={({ pressed }) => [
               styles.sortChip,
               {
@@ -196,12 +207,32 @@ export default function SearchScreen() {
         <Text style={[styles.resultsTitle, { color: colors.text }]}>
           {t('screens.search.resultsCount', { count: results.length })}
         </Text>
+        <Pressable
+          onPress={() => {
+            filtersOffset.current = 0;
+            Animated.spring(filtersTranslateY, { toValue: 0, useNativeDriver: true }).start();
+          }}
+          style={[styles.filtersButton, { backgroundColor: colors.primary }]}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir filtros"
+          accessibilityHint="Mostra filtros por necessidades e equipamentos."
+        >
+          <Text style={styles.filtersButtonText}>
+            {activeFiltersCount ? `Filtros ativos: ${activeFiltersCount}` : 'Abrir filtros'}
+          </Text>
+        </Pressable>
+        {!!filterFeedback && (
+          <Text style={[styles.feedbackText, { color: colors.muted }]}>{filterFeedback}</Text>
+        )}
         <FlatList
           data={results}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Pressable
               onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
+              accessibilityRole="button"
+              accessibilityLabel={`Abrir ficha de ${item.name}`}
+              accessibilityHint="Abre detalhes, avaliações e direções deste parque."
               style={({ pressed }) => [
                 styles.resultCard,
                 {
@@ -261,6 +292,9 @@ export default function SearchScreen() {
                 <Pressable
                   key={need.key}
                   onPress={() => toggleNeed(need.key)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${isActive ? 'Remover' : 'Adicionar'} filtro ${t(need.labelKey)}`}
+                  accessibilityHint="Atualiza a lista de parques."
                   style={({ pressed }) => [
                     styles.chip,
                     {
@@ -290,6 +324,9 @@ export default function SearchScreen() {
                 <Pressable
                   key={item.key}
                   onPress={() => toggleEquipment(item.key)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${isActive ? 'Remover' : 'Adicionar'} filtro ${t(item.labelKey)}`}
+                  accessibilityHint="Atualiza a lista de parques."
                   style={({ pressed }) => [
                     styles.chip,
                     {
@@ -351,6 +388,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 16,
     borderWidth: 1,
+    minHeight: 44,
+    justifyContent: 'center',
   },
   sortRow: {
     flexDirection: 'row',
@@ -366,6 +405,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 16,
     borderWidth: 1,
+    minHeight: 44,
+    justifyContent: 'center',
   },
   resultsTitle: {
     marginTop: 12,
@@ -375,6 +416,25 @@ const styles = StyleSheet.create({
   resultsList: {
     paddingTop: 8,
     paddingBottom: 96,
+  },
+  filtersButton: {
+    alignSelf: 'flex-start',
+    minHeight: 44,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  filtersButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+    fontSize: 13,
+  },
+  feedbackText: {
+    fontSize: 12,
+    marginTop: 6,
+    fontWeight: '700',
   },
   resultCard: {
     borderWidth: 1,

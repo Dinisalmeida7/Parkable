@@ -254,11 +254,23 @@ export default function ParkDetailsScreen() {
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.iconButton}>
+        <Pressable
+          onPress={() => navigation.goBack()}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+          accessibilityHint="Volta ao ecrã anterior."
+        >
           <Ionicons name="arrow-back" size={22} color={UI.primary} />
         </Pressable>
         <Text style={styles.brand}>ParkAble</Text>
-        <Pressable onPress={handleToggleFavorite} style={styles.iconButton}>
+        <Pressable
+          onPress={handleToggleFavorite}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel={favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          accessibilityHint="Atualiza a lista de locais guardados."
+        >
           <Ionicons name={favorite ? 'heart' : 'heart-outline'} size={22} color={UI.primary} />
         </Pressable>
       </View>
@@ -273,6 +285,7 @@ export default function ParkDetailsScreen() {
             <View key={item} style={styles.photoCard}>
               <View style={styles.photoGradient} />
               <Ionicons name="leaf-outline" size={96} color="rgba(255,255,255,0.24)" />
+              <Text style={styles.photoAltText}>Imagem ilustrativa do parque</Text>
               {item === 0 && (
                 <View style={styles.photoCounter}>
                   <Text style={styles.photoCounterText}>1/3</Text>
@@ -294,38 +307,17 @@ export default function ParkDetailsScreen() {
           </View>
           <View style={styles.ratingBox}>
             <Text style={styles.ratingValue}>{communityRating}</Text>
-            <Text style={styles.ratingLabel}>Rating</Text>
+            <Text style={styles.ratingLabel}>Avaliação</Text>
           </View>
         </View>
 
         {locationDenied && <Text style={styles.locationDenied}>{t('screens.search.locationDenied')}</Text>}
 
-        <View style={styles.featurePills}>
-          {needs
-            .filter((item) => item.value)
-            .slice(0, 3)
-            .map((item, index) => (
-              <View
-                key={item.key}
-                style={[
-                  styles.featurePill,
-                  { backgroundColor: index === 0 ? UI.tertiary : UI.surfaceHigh },
-                ]}
-              >
-                <Ionicons
-                  name={index === 0 ? 'accessibility' : 'checkmark-circle-outline'}
-                  size={15}
-                  color={index === 0 ? '#FFFFFF' : UI.muted}
-                />
-                <Text style={[styles.featurePillText, { color: index === 0 ? '#FFFFFF' : UI.muted }]}>
-                  {t(item.labelKey)}
-                </Text>
-              </View>
-            ))}
-        </View>
-
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Accessibility Scorecard</Text>
+          <Text style={styles.sectionTitle}>Resumo de acessibilidade</Text>
+          <Text style={styles.scoreExplanation}>
+            A pontuação combina equipamentos disponíveis, necessidades suportadas e avaliações da comunidade.
+          </Text>
           <View style={styles.scoreGrid}>
             <View style={styles.scoreCard}>
               <View style={styles.scoreTop}>
@@ -334,8 +326,8 @@ export default function ParkDetailsScreen() {
                 </View>
                 <Text style={styles.scorePercent}>{scoreToPercent(park.accessibilityScore)}</Text>
               </View>
-              <Text style={styles.scoreTitle}>Mobility</Text>
-              <Text style={styles.scoreText}>Level terrain and wide paths</Text>
+              <Text style={styles.scoreTitle}>Mobilidade</Text>
+              <Text style={styles.scoreText}>Percursos largos, planos e fáceis de usar</Text>
             </View>
             <View style={styles.scoreCard}>
               <View style={styles.scoreTop}>
@@ -346,8 +338,8 @@ export default function ParkDetailsScreen() {
                   {scoreToPercent(Number(communityRating))}
                 </Text>
               </View>
-              <Text style={styles.scoreTitle}>Community</Text>
-              <Text style={styles.scoreText}>{park.communitySummary?.count ?? ratings.length} ratings</Text>
+              <Text style={styles.scoreTitle}>Comunidade</Text>
+              <Text style={styles.scoreText}>{park.communitySummary?.count ?? ratings.length} avaliações</Text>
             </View>
             <View style={[styles.scoreCard, styles.scoreCardWide]}>
               <View style={styles.scoreWideContent}>
@@ -355,9 +347,9 @@ export default function ParkDetailsScreen() {
                   <Ionicons name="trail-sign-outline" size={22} color={UI.tertiary} />
                 </View>
                 <View style={styles.flex}>
-                  <Text style={styles.scoreTitle}>Features</Text>
+                  <Text style={styles.scoreTitle}>Equipamentos</Text>
                   <Text style={styles.scoreText}>
-                    {features.filter((item) => item.value).length} accessible equipments available
+                    {features.filter((item) => item.value).length} equipamentos acessíveis disponíveis
                   </Text>
                 </View>
                 <Text style={[styles.scorePercent, { color: UI.tertiary }]}>
@@ -365,6 +357,22 @@ export default function ParkDetailsScreen() {
                 </Text>
               </View>
             </View>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('screens.parkDetails.needs')}</Text>
+          <View style={styles.chipRow}>
+            {needs.map((item) => (
+              <View key={item.key} style={[styles.chip, { opacity: item.value ? 1 : 0.45 }]}>
+                <Ionicons
+                  name={item.value ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={15}
+                  color={item.value ? UI.primary : UI.muted}
+                />
+                <Text style={styles.chipText}>{t(item.labelKey)}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -410,7 +418,7 @@ export default function ParkDetailsScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View>
-              <Text style={styles.sectionTitle}>Community Voice</Text>
+              <Text style={styles.sectionTitle}>Opiniões da comunidade</Text>
               <Text style={styles.sectionSubtitle}>{t('screens.parkDetails.lastUpdated')}: {park.lastUpdated}</Text>
             </View>
             <Text style={styles.viewAll}>{ratings.length || park.communitySummary?.count || 0}</Text>
@@ -427,7 +435,7 @@ export default function ParkDetailsScreen() {
                       <Text style={styles.reviewAvatarText}>U{index + 1}</Text>
                     </View>
                     <View>
-                      <Text style={styles.reviewName}>ParkAble user</Text>
+                      <Text style={styles.reviewName}>Utilizador ParkAble</Text>
                       <Text style={styles.reviewScore}>{rating.overall?.toFixed(1) ?? '0.0'} / 5</Text>
                     </View>
                   </View>
@@ -460,6 +468,8 @@ export default function ParkDetailsScreen() {
                   placeholderTextColor="#6F7A6B"
                   keyboardType="decimal-pad"
                   style={styles.scoreInput}
+                  accessibilityLabel={`Pontuação de ${placeholder}`}
+                  accessibilityHint="Insere um valor de zero a cinco."
                 />
               ))}
             </View>
@@ -470,9 +480,14 @@ export default function ParkDetailsScreen() {
               placeholderTextColor="#6F7A6B"
               style={styles.commentInput}
               multiline
+              accessibilityLabel="Comentário da avaliação"
+              accessibilityHint="Escreve informação útil sobre acessibilidade, alertas ou experiência no parque."
             />
             <Pressable
               onPress={handleSubmitRating}
+              accessibilityRole="button"
+              accessibilityLabel="Enviar avaliação"
+              accessibilityHint="Guarda a avaliação escrita para este parque."
               style={({ pressed }) => [styles.submitButton, { opacity: pressed ? 0.9 : 1 }]}
             >
               <Text style={styles.submitText}>{t('screens.parkDetails.submitReview')}</Text>
@@ -485,6 +500,9 @@ export default function ParkDetailsScreen() {
       <View style={styles.stickyCta}>
         <Pressable
           onPress={handleDirections}
+          accessibilityRole="button"
+          accessibilityLabel={`Obter direções para ${park.name}`}
+          accessibilityHint="Abre o mapa com a melhor rota a partir da tua localização."
           style={({ pressed }) => [styles.directionsButton, { opacity: pressed ? 0.9 : 1 }]}
         >
           <Ionicons name="navigate-outline" size={20} color="#FFFFFF" />
@@ -492,6 +510,9 @@ export default function ParkDetailsScreen() {
         </Pressable>
         <Pressable
           onPress={handleToggleFavorite}
+          accessibilityRole="button"
+          accessibilityLabel={favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          accessibilityHint="Atualiza a lista de locais guardados."
           style={({ pressed }) => [styles.stickyFavorite, { opacity: pressed ? 0.85 : 1 }]}
         >
           <Ionicons name={favorite ? 'heart' : 'heart-outline'} size={22} color={UI.secondary} />
@@ -522,9 +543,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -569,6 +590,12 @@ const styles = StyleSheet.create({
     color: UI.text,
     fontSize: 11,
     fontWeight: '800',
+  },
+  photoAltText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 6,
   },
   hero: {
     paddingHorizontal: 28,
@@ -716,6 +743,13 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     marginTop: 4,
   },
+  scoreExplanation: {
+    color: UI.muted,
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: -6,
+    marginBottom: 14,
+  },
   flex: {
     flex: 1,
   },
@@ -732,6 +766,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     backgroundColor: UI.surfaceHigh,
+    minHeight: 44,
   },
   chipText: {
     color: UI.muted,

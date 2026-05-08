@@ -37,7 +37,7 @@ export default function AuthScreen() {
           <Ionicons name="leaf" size={44} color={UI.primary} />
         </View>
         <Text style={styles.brandTitle}>ParkAble</Text>
-        <Text style={styles.brandSubtitle}>Access nature's sanctuary, for everyone.</Text>
+        <Text style={styles.brandSubtitle}>Natureza acessível para todas as pessoas.</Text>
       </View>
 
       <View style={styles.card}>
@@ -45,16 +45,21 @@ export default function AuthScreen() {
         <View style={styles.inputWrap}>
           <Ionicons name="person-outline" size={20} color={UI.muted} />
           <TextInput
-            value={name}
+          value={name}
             onChangeText={setName}
             placeholder={t('screens.auth.inputLabel')}
             placeholderTextColor="#7A8376"
-            style={styles.input}
-          />
+          style={styles.input}
+          accessibilityLabel="Nome"
+          accessibilityHint="Indica como queres ser tratado na app."
+        />
         </View>
 
         <Pressable
           onPress={handleLogin}
+          accessibilityRole="button"
+          accessibilityLabel="Entrar"
+          accessibilityHint="Inicia sessão localmente com o nome indicado."
           style={({ pressed }) => [styles.cta, { opacity: pressed ? 0.9 : 1 }]}
         >
           <Text style={styles.ctaText}>{t('screens.auth.cta')}</Text>
@@ -62,9 +67,12 @@ export default function AuthScreen() {
         </Pressable>
 
         <View style={styles.divider} />
-        <Text style={styles.helper}>Don't have an account?</Text>
+        <Text style={styles.helper}>Ainda não tens conta?</Text>
         <Pressable
           onPress={handleLogin}
+          accessibilityRole="button"
+          accessibilityLabel="Entrar como convidado"
+          accessibilityHint="Entra sem criar uma conta."
           style={({ pressed }) => [styles.secondaryCta, { opacity: pressed ? 0.85 : 1 }]}
         >
           <Text style={styles.secondaryText}>{t('screens.auth.skip')}</Text>
@@ -74,15 +82,15 @@ export default function AuthScreen() {
       <View style={styles.trustRow}>
         <View style={styles.trustItem}>
           <Ionicons name="accessibility" size={16} color={UI.muted} />
-          <Text style={styles.trustText}>Inclusive</Text>
+          <Text style={styles.trustText}>Inclusiva</Text>
         </View>
         <View style={styles.trustItem}>
           <Ionicons name="shield-checkmark-outline" size={16} color={UI.muted} />
-          <Text style={styles.trustText}>Secure</Text>
+          <Text style={styles.trustText}>Segura</Text>
         </View>
         <View style={styles.trustItem}>
           <Ionicons name="leaf-outline" size={16} color={UI.muted} />
-          <Text style={styles.trustText}>Eco-friendly</Text>
+          <Text style={styles.trustText}>Sustentável</Text>
         </View>
       </View>
       <View style={styles.bottomStripe} />

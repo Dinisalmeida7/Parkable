@@ -23,26 +23,26 @@ const UI = {
 const NEED_META = {
   mobility: {
     icon: 'accessibility',
-    title: 'Motor Needs',
-    description: 'Ramps, smooth paths and accessible routes.',
+    title: 'Mobilidade reduzida',
+    description: 'Percursos planos, rampas e caminhos fáceis de usar.',
     color: UI.primaryContainer,
   },
   cognitive: {
     icon: 'sparkles-outline',
-    title: 'Cognitive/Autism',
-    description: 'Quiet zones, clear signs and calmer spaces.',
+    title: 'Ambientes calmos',
+    description: 'Zonas tranquilas, sinalização simples e menos estímulos.',
     color: UI.secondary,
   },
   visual: {
     icon: 'eye-outline',
-    title: 'Visual Impairment',
-    description: 'High contrast signs, tactile paths and audio guides.',
+    title: 'Apoio visual',
+    description: 'Sinais legíveis, caminhos táteis e informação áudio.',
     color: UI.tertiary,
   },
   auditory: {
     icon: 'ear-outline',
-    title: 'Hearing Impairment',
-    description: 'Visual alerts and easy-to-read park information.',
+    title: 'Apoio auditivo',
+    description: 'Alertas visuais e informação clara no ecrã.',
     color: '#88D982',
   },
 };
@@ -76,13 +76,13 @@ export default function OnboardingScreen() {
           <View style={styles.stepTrack}>
             <View style={styles.stepFill} />
           </View>
-          <Text style={styles.stepText}>Step 2 of 3</Text>
+          <Text style={styles.stepText}>Passo 2 de 3</Text>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.hero}>
-          <Text style={styles.title}>What are your needs?</Text>
+          <Text style={styles.title}>Que apoio precisas?</Text>
           <Text style={styles.subtitle}>{t('screens.onboarding.subtitle')}</Text>
         </View>
 
@@ -94,6 +94,9 @@ export default function OnboardingScreen() {
               <Pressable
                 key={need.key}
                 onPress={() => toggleNeed(need.key)}
+                accessibilityRole="button"
+                accessibilityLabel={`${isActive ? 'Remover' : 'Selecionar'} ${meta.title}`}
+                accessibilityHint="Ajuda a personalizar recomendações de parques."
                 style={({ pressed }) => [
                   styles.needCard,
                   {
@@ -120,15 +123,15 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.extraSection}>
-          <Text style={styles.extraLabel}>Additional Filters</Text>
+          <Text style={styles.extraLabel}>Preferências adicionais</Text>
           <View style={styles.extraRow}>
             <View style={[styles.extraChip, { backgroundColor: '#FFF4DE' }]}>
               <Ionicons name="paw-outline" size={16} color={UI.tertiary} />
-              <Text style={[styles.extraText, { color: UI.tertiary }]}>Service Animal</Text>
+              <Text style={[styles.extraText, { color: UI.tertiary }]}>Animal de assistência</Text>
             </View>
             <View style={styles.extraChip}>
               <Ionicons name="medical-outline" size={16} color={UI.muted} />
-              <Text style={styles.extraText}>Changing Rooms</Text>
+              <Text style={styles.extraText}>Fraldário adaptado</Text>
             </View>
           </View>
         </View>
@@ -137,13 +140,16 @@ export default function OnboardingScreen() {
       <View style={styles.footer}>
         <Pressable
           onPress={handleContinue}
+          accessibilityRole="button"
+          accessibilityLabel="Continuar"
+          accessibilityHint="Guarda as preferências escolhidas e abre a app."
           style={({ pressed }) => [styles.cta, { opacity: pressed ? 0.9 : 1 }]}
         >
           <Text style={styles.ctaText}>{t('screens.onboarding.cta')}</Text>
           <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
         </Pressable>
         <Pressable onPress={handleContinue}>
-          <Text style={styles.skipText}>I'm not sure yet, skip this step</Text>
+          <Text style={styles.skipText}>Ainda não sei, saltar este passo</Text>
         </Pressable>
       </View>
     </View>
@@ -164,9 +170,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },

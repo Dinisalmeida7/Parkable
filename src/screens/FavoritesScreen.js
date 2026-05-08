@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getFavorites, getParkById, removeFavorite } from '../data';
 import { useTranslation } from '../i18n';
@@ -57,7 +58,8 @@ export default function FavoritesScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [favoriteIds, setFavoriteIds] = useState([]);
-  const referenceLocation = useMemo(() => ({ lat: 38.7223, lng: -9.1393 }), []);
+  const [userLocation, setUserLocation] = useState(null);
+  const [feedback, setFeedback] = useState('');
 
   const loadFavorites = useCallback(async () => {
     const storedFavorites = await getFavorites();
@@ -71,6 +73,34 @@ export default function FavoritesScreen() {
     }, [loadFavorites])
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      const loadLocation = async () => {
+        try {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            return;
+          }
+          const current = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+          });
+          if (active) {
+            setUserLocation({ lat: current.coords.latitude, lng: current.coords.longitude });
+          }
+        } catch (error) {
+          if (active) {
+            setUserLocation(null);
+          }
+        }
+      };
+      loadLocation();
+      return () => {
+        active = false;
+      };
+    }, [])
+  );
+
   const favoriteParks = useMemo(
     () => favoriteIds.map((id) => getParkById(id)).filter(Boolean),
     [favoriteIds]
@@ -79,6 +109,7 @@ export default function FavoritesScreen() {
   const handleRemove = async (parkId) => {
     const next = await removeFavorite(parkId);
     setFavoriteIds(next);
+    setFeedback('Local removido dos favoritos');
   };
 
   const handleBack = () => {
@@ -91,12 +122,24 @@ export default function FavoritesScreen() {
     <View style={styles.container}>
       <View style={styles.topBar}>
         <View style={styles.topLeft}>
-          <Pressable onPress={handleBack} style={styles.iconButton}>
+          <Pressable
+            onPress={handleBack}
+            style={styles.iconButton}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
+            accessibilityHint="Volta ao ecrã anterior."
+          >
             <Ionicons name="arrow-back" size={22} color={UI.primary} />
           </Pressable>
           <Text style={styles.brand}>ParkAble</Text>
         </View>
-        <Pressable onPress={() => navigation.navigate('Profile')} style={styles.iconButton}>
+        <Pressable
+          onPress={() => navigation.navigate('Profile')}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir perfil"
+          accessibilityHint="Abre preferências e sessão."
+        >
           <Ionicons name="accessibility" size={22} color={UI.primary} />
         </Pressable>
       </View>
@@ -107,18 +150,19 @@ export default function FavoritesScreen() {
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.hero}>
-            <Text style={styles.title}>Saved Places</Text>
+            <Text style={styles.title}>Locais guardados</Text>
             <View style={styles.countPill}>
               <Text style={styles.countText}>
                 {t('screens.favorites.count', { count: favoriteParks.length })}
               </Text>
             </View>
+            {!!feedback && <Text style={styles.feedbackText}>{feedback}</Text>}
           </View>
         }
         renderItem={({ item }) => {
           const [topColor, bottomColor] = getCoverColors(item.id);
           const rating = item.communitySummary?.rating ?? item.accessibilityScore;
-          const distance = haversineDistanceKm(referenceLocation, item.coords);
+          const distance = userLocation ? haversineDistanceKm(userLocation, item.coords) : null;
           const accessibilityLabel =
             item.accessibilityScore >= 4.2
               ? 'Totalmente acessivel'
@@ -129,6 +173,9 @@ export default function FavoritesScreen() {
           return (
             <Pressable
               onPress={() => navigation.navigate('ParkDetails', { parkId: item.id })}
+              accessibilityRole="button"
+              accessibilityLabel={`Abrir ficha de ${item.name}`}
+              accessibilityHint="Abre detalhes, avaliações e direções deste parque."
               style={({ pressed }) => [styles.card, { opacity: pressed ? 0.96 : 1 }]}
             >
               <View style={styles.cover}>
@@ -139,6 +186,9 @@ export default function FavoritesScreen() {
                 </View>
                 <Pressable
                   onPress={() => handleRemove(item.id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remover ${item.name} dos favoritos`}
+                  accessibilityHint="Remove este parque da lista de locais guardados."
                   style={({ pressed }) => [styles.favoriteButton, { opacity: pressed ? 0.8 : 1 }]}
                 >
                   <Ionicons name="heart" size={20} color={UI.primary} />
@@ -164,7 +214,7 @@ export default function FavoritesScreen() {
                   <View style={styles.chip}>
                     <Ionicons name="leaf-outline" size={14} color={UI.muted} />
                     <Text style={styles.chipText}>
-                      {distance ? `${distance.toFixed(1)} km` : '--'}
+                      {distance ? `${distance.toFixed(1)} km` : 'Distância indisponível'}
                     </Text>
                   </View>
                 </View>
@@ -201,9 +251,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -221,6 +271,12 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '800',
     color: UI.text,
+  },
+  feedbackText: {
+    marginTop: 8,
+    color: UI.muted,
+    fontSize: 12,
+    fontWeight: '700',
   },
   listContent: {
     paddingBottom: 120,
@@ -271,9 +327,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 14,
     right: 14,
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.9)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -327,6 +383,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     backgroundColor: UI.surfaceHigh,
+    minHeight: 44,
   },
   chipText: {
     fontSize: 11,

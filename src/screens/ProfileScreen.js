@@ -83,21 +83,11 @@ export default function ProfileScreen() {
         ) : null}
       </View>
 
-      <View style={styles.noticeCard}>
-        <View style={styles.noticeRow}>
-          <Ionicons name="notifications-outline" size={22} color={UI.tertiary} />
-          <View style={styles.flex}>
-            <Text style={styles.noticeTitle}>Notifications</Text>
-            <Text style={styles.noticeText}>Stay updated on park accessibility alerts.</Text>
-          </View>
-          <View style={styles.toggle}>
-            <View style={styles.toggleDot} />
-          </View>
-        </View>
-      </View>
-
       <Pressable
         onPress={signOut}
+        accessibilityRole="button"
+        accessibilityLabel="Sair da sessão"
+        accessibilityHint="Termina a sessão e volta ao ecrã de entrada."
         style={({ pressed }) => [styles.signOut, { opacity: pressed ? 0.85 : 1 }]}
       >
         <Ionicons name="log-out-outline" size={18} color={UI.error} />
@@ -220,42 +210,6 @@ const styles = StyleSheet.create({
     color: UI.muted,
     fontSize: 12,
     fontWeight: '700',
-  },
-  noticeCard: {
-    marginHorizontal: 24,
-    marginTop: 14,
-    borderRadius: 24,
-    backgroundColor: UI.surfaceLow,
-    padding: 20,
-  },
-  noticeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  noticeTitle: {
-    color: UI.text,
-    fontWeight: '800',
-  },
-  noticeText: {
-    color: UI.muted,
-    fontSize: 12,
-    marginTop: 3,
-  },
-  toggle: {
-    width: 50,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: UI.primary,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    padding: 4,
-  },
-  toggleDot: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#FFFFFF',
   },
   signOut: {
     marginHorizontal: 24,
