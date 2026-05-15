@@ -31,6 +31,7 @@ const UI = {
   text: '#1A1C1C',
   muted: '#3F4A3C',
   primary: '#1B6D24',
+  primarySoft: '#DFF6DC',
   primaryContainer: '#5DAC5B',
   secondary: '#005FAF',
   secondarySoft: '#D4E3FF',
@@ -64,15 +65,6 @@ const haversineDistanceKm = (from, to) => {
   return earthRadius * c;
 };
 
-const parseScore = (value) => {
-  const normalized = value.replace(',', '.');
-  const parsed = Number.parseFloat(normalized);
-  if (Number.isNaN(parsed)) {
-    return 0;
-  }
-  return clampScore(parsed);
-};
-
 const scoreToPercent = (score) => `${Math.round((score / 5) * 100)}%`;
 
 export default function ParkDetailsScreen() {
@@ -85,12 +77,13 @@ export default function ParkDetailsScreen() {
   const [ratings, setRatings] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [locationDenied, setLocationDenied] = useState(false);
-  const [overall, setOverall] = useState('');
-  const [mobility, setMobility] = useState('');
-  const [visual, setVisual] = useState('');
-  const [auditory, setAuditory] = useState('');
-  const [cognitive, setCognitive] = useState('');
+  const [overall, setOverall] = useState(0);
+  const [mobility, setMobility] = useState(0);
+  const [visual, setVisual] = useState(0);
+  const [auditory, setAuditory] = useState(0);
+  const [cognitive, setCognitive] = useState(0);
   const [comment, setComment] = useState('');
+  const [actionFeedback, setActionFeedback] = useState('');
 
   const loadDetails = useCallback(async () => {
     if (!parkId) {
@@ -177,14 +170,18 @@ export default function ParkDetailsScreen() {
       return;
     }
     const next = await toggleFavorite(parkId);
-    setFavorite(next.includes(parkId));
+    const isNowFavorite = next.includes(parkId);
+    setFavorite(isNowFavorite);
+    setActionFeedback(
+      isNowFavorite ? 'Parque adicionado aos favoritos.' : 'Parque removido dos favoritos.'
+    );
   };
 
   const handleSubmitRating = async () => {
     if (!parkId) {
       return;
     }
-    const nextOverall = parseScore(overall);
+    const nextOverall = clampScore(overall);
     const nextComment = comment.trim();
     if (!nextOverall && !nextComment) {
       Alert.alert(t('screens.parkDetails.reviewErrorTitle'), t('screens.parkDetails.reviewErrorBody'));
@@ -194,19 +191,20 @@ export default function ParkDetailsScreen() {
     await addRating({
       parkId,
       overall: nextOverall,
-      mobility: parseScore(mobility),
-      visual: parseScore(visual),
-      auditory: parseScore(auditory),
-      cognitive: parseScore(cognitive),
+      mobility: clampScore(mobility),
+      visual: clampScore(visual),
+      auditory: clampScore(auditory),
+      cognitive: clampScore(cognitive),
       comment: nextComment,
     });
 
-    setOverall('');
-    setMobility('');
-    setVisual('');
-    setAuditory('');
-    setCognitive('');
+    setOverall(0);
+    setMobility(0);
+    setVisual(0);
+    setAuditory(0);
+    setCognitive(0);
     setComment('');
+    setActionFeedback('Avaliação enviada com sucesso.');
     await loadDetails();
   };
 
@@ -310,6 +308,16 @@ export default function ParkDetailsScreen() {
             <Text style={styles.ratingLabel}>Avaliação</Text>
           </View>
         </View>
+
+        {!!actionFeedback && (
+          <Text
+            style={styles.actionFeedback}
+            accessibilityLiveRegion="polite"
+            accessibilityRole="text"
+          >
+            {actionFeedback}
+          </Text>
+        )}
 
         {locationDenied && <Text style={styles.locationDenied}>{t('screens.search.locationDenied')}</Text>}
 
@@ -452,27 +460,15 @@ export default function ParkDetailsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('screens.parkDetails.addReview')}</Text>
           <View style={styles.reviewForm}>
-            <View style={styles.inputRow}>
-              {[
-                [overall, setOverall, t('screens.parkDetails.overall')],
-                [mobility, setMobility, t('screens.parkDetails.mobility')],
-                [visual, setVisual, t('screens.parkDetails.visual')],
-                [auditory, setAuditory, t('screens.parkDetails.auditory')],
-                [cognitive, setCognitive, t('screens.parkDetails.cognitive')],
-              ].map(([value, setter, placeholder]) => (
-                <TextInput
-                  key={placeholder}
-                  value={value}
-                  onChangeText={setter}
-                  placeholder={placeholder}
-                  placeholderTextColor="#6F7A6B"
-                  keyboardType="decimal-pad"
-                  style={styles.scoreInput}
-                  accessibilityLabel={`Pontuação de ${placeholder}`}
-                  accessibilityHint="Insere um valor de zero a cinco."
-                />
-              ))}
-            </View>
+            {[
+              [overall, setOverall, t('screens.parkDetails.overall')],
+              [mobility, setMobility, t('screens.parkDetails.mobility')],
+              [visual, setVisual, t('screens.parkDetails.visual')],
+              [auditory, setAuditory, t('screens.parkDetails.auditory')],
+              [cognitive, setCognitive, t('screens.parkDetails.cognitive')],
+            ].map(([value, setter, label]) => (
+              <ScoreSelector key={label} label={label} value={value} onChange={setter} />
+            ))}
             <TextInput
               value={comment}
               onChangeText={setComment}
@@ -517,6 +513,40 @@ export default function ParkDetailsScreen() {
         >
           <Ionicons name={favorite ? 'heart' : 'heart-outline'} size={22} color={UI.secondary} />
         </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function ScoreSelector({ label, value, onChange }) {
+  return (
+    <View style={styles.scoreSelector}>
+      <Text style={styles.scoreSelectorLabel}>{label}</Text>
+      <View style={styles.scoreButtons}>
+        {[1, 2, 3, 4, 5].map((score) => {
+          const selected = value >= score;
+          return (
+            <Pressable
+              key={`${label}-${score}`}
+              onPress={() => onChange(score)}
+              accessibilityRole="button"
+              accessibilityLabel={`${label}: ${score} de 5`}
+              accessibilityState={{ selected }}
+              accessibilityHint="Define a pontuação desta categoria."
+              style={({ pressed }) => [
+                styles.scoreButton,
+                selected && styles.scoreButtonSelected,
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+            >
+              <Ionicons
+                name={selected ? 'star' : 'star-outline'}
+                size={22}
+                color={selected ? '#7E5700' : UI.muted}
+              />
+            </Pressable>
+          );
+        })}
       </View>
     </View>
   );
@@ -650,6 +680,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginHorizontal: 28,
     marginTop: 8,
+  },
+  actionFeedback: {
+    marginHorizontal: 28,
+    marginTop: 12,
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    backgroundColor: UI.primarySoft,
+    color: UI.primary,
+    fontSize: 13,
+    fontWeight: '800',
   },
   featurePills: {
     paddingHorizontal: 28,
@@ -850,18 +891,29 @@ const styles = StyleSheet.create({
     padding: 18,
     backgroundColor: UI.surface,
   },
-  inputRow: {
+  scoreSelector: {
+    marginBottom: 12,
+  },
+  scoreSelectorLabel: {
+    color: UI.text,
+    fontSize: 13,
+    fontWeight: '800',
+    marginBottom: 8,
+  },
+  scoreButtons: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
   },
-  scoreInput: {
-    width: 86,
-    borderRadius: 16,
+  scoreButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     backgroundColor: UI.surfaceHigh,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    color: UI.text,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoreButtonSelected: {
+    backgroundColor: '#FFF4DE',
   },
   commentInput: {
     minHeight: 96,

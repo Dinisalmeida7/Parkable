@@ -11,6 +11,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { applyParkFilters, EQUIPMENT, getParks, NEEDS } from '../data';
@@ -28,6 +29,7 @@ export default function SearchScreen() {
   const [userLocation, setUserLocation] = useState(null);
   const [locationDenied, setLocationDenied] = useState(false);
   const [filterFeedback, setFilterFeedback] = useState('');
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const filtersTranslateY = useRef(new Animated.Value(0)).current;
   const filtersOffset = useRef(0);
   const filtersHeight = useMemo(() => Math.round(Dimensions.get('window').height * 0.36), []);
@@ -125,6 +127,7 @@ export default function SearchScreen() {
             gesture.vy > 0.4 || filtersOffset.current + gesture.dy > maxFiltersTranslate / 2;
           const target = shouldCollapse ? maxFiltersTranslate : 0;
           filtersOffset.current = target;
+          setFiltersExpanded(!shouldCollapse);
           Animated.spring(filtersTranslateY, {
             toValue: target,
             useNativeDriver: true,
@@ -137,7 +140,14 @@ export default function SearchScreen() {
   useEffect(() => {
     filtersOffset.current = maxFiltersTranslate;
     filtersTranslateY.setValue(maxFiltersTranslate);
+    setFiltersExpanded(false);
   }, [filtersTranslateY, maxFiltersTranslate]);
+
+  const openFilters = () => {
+    filtersOffset.current = 0;
+    setFiltersExpanded(true);
+    Animated.spring(filtersTranslateY, { toValue: 0, useNativeDriver: true }).start();
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -208,21 +218,25 @@ export default function SearchScreen() {
           {t('screens.search.resultsCount', { count: results.length })}
         </Text>
         <Pressable
-          onPress={() => {
-            filtersOffset.current = 0;
-            Animated.spring(filtersTranslateY, { toValue: 0, useNativeDriver: true }).start();
-          }}
+          onPress={openFilters}
           style={[styles.filtersButton, { backgroundColor: colors.primary }]}
           accessibilityRole="button"
           accessibilityLabel="Abrir filtros"
-          accessibilityHint="Mostra filtros por necessidades e equipamentos."
+          accessibilityState={{ expanded: filtersExpanded }}
+          accessibilityHint="Mostra filtros por necessidades, equipamentos e acessibilidade."
         >
           <Text style={styles.filtersButtonText}>
             {activeFiltersCount ? `Filtros ativos: ${activeFiltersCount}` : 'Abrir filtros'}
           </Text>
+          <Ionicons name="chevron-up" size={18} color="#FFFFFF" />
         </Pressable>
         {!!filterFeedback && (
-          <Text style={[styles.feedbackText, { color: colors.muted }]}>{filterFeedback}</Text>
+          <Text
+            style={[styles.feedbackText, { color: colors.muted }]}
+            accessibilityLiveRegion="polite"
+          >
+            {filterFeedback}
+          </Text>
         )}
         <FlatList
           data={results}
@@ -275,7 +289,7 @@ export default function SearchScreen() {
             <View>
               <Text style={[styles.hudTitle, { color: colors.text }]}>Filtros</Text>
               <Text style={[styles.hudSubtitle, { color: colors.muted }]}>
-                {activeFiltersCount ? `${activeFiltersCount} ativos` : 'Sem filtros ativos'}
+                {activeFiltersCount ? `${activeFiltersCount} ativos` : 'Sem filtros ativos'} - arrasta para fechar
               </Text>
             </View>
           </View>
@@ -422,8 +436,10 @@ const styles = StyleSheet.create({
     minHeight: 44,
     borderRadius: 22,
     paddingHorizontal: 16,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
     marginTop: 8,
   },
   filtersButtonText: {
