@@ -156,7 +156,11 @@ export default function FavoritesScreen() {
                 {t('screens.favorites.count', { count: favoriteParks.length })}
               </Text>
             </View>
-            {!!feedback && <Text style={styles.feedbackText}>{feedback}</Text>}
+            {!!feedback && (
+              <Text style={styles.feedbackText} accessibilityLiveRegion="polite">
+                {feedback}
+              </Text>
+            )}
           </View>
         }
         renderItem={({ item }) => {

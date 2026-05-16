@@ -384,7 +384,7 @@ export default function MapScreen() {
       >
         <View style={styles.cardImage}>
           <View style={[styles.ratingPill, { backgroundColor: colors.card }]}>
-            <Text style={{ color: colors.accent, fontWeight: '700' }}>★</Text>
+            <Ionicons name="star" size={14} color={colors.accent} />
             <Text style={{ marginLeft: 4, color: colors.text, fontWeight: '700' }}>
               {item.communitySummary?.rating?.toFixed(1) ?? item.accessibilityScore.toFixed(1)}
             </Text>
@@ -456,7 +456,7 @@ export default function MapScreen() {
           accessibilityHint="Volta ao ecrã anterior ou sai do modo de direções."
           style={({ pressed }) => [styles.headerButton, { opacity: pressed ? 0.6 : 1 }]}
         >
-          <Text style={[styles.headerIcon, { color: colors.primary }]}>{'<'}</Text>
+          <Ionicons name="chevron-back" size={28} color={colors.primary} />
         </Pressable>
         {!routeActive ? (
           <Text style={[styles.headerTitle, { color: colors.primary }]}>ParkAble</Text>
@@ -475,6 +475,9 @@ export default function MapScreen() {
           )}
           <Pressable
             onPress={openSearch}
+            accessibilityRole="button"
+            accessibilityLabel="Abrir pesquisa e filtros"
+            accessibilityHint="Abre a lista de parques com filtros por necessidades e equipamentos."
             style={({ pressed }) => [
               styles.searchBar,
               {
@@ -484,7 +487,7 @@ export default function MapScreen() {
               },
             ]}
           >
-            <Text style={[styles.searchIcon, { color: colors.muted }]}>⌕</Text>
+            <Ionicons name="search" size={18} color={colors.muted} />
             <Text style={[styles.searchText, { color: colors.muted }]}>
               {t('screens.map.searchPlaceholder')}
             </Text>
