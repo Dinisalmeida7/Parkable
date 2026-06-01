@@ -20,8 +20,8 @@ const UI = {
 export default function LoginScreen({ navigation }) {
   const { loginSavedUser } = useSession();
   const [step, setStep] = useState('credentials');
-  const [email, setEmail] = useState('mail registado');
-  const [password, setPassword] = useState('12345678');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   if (step === 'account') {
     return (

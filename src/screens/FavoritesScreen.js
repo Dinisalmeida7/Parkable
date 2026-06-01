@@ -3,7 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { getFavorites, getParkById, removeFavorite } from '../data';
+import { getFavorites, getParkById, haversineDistanceKm, removeFavorite } from '../data';
 import { useTranslation } from '../i18n';
 
 const UI = {
@@ -16,29 +16,6 @@ const UI = {
   primarySoft: '#123B24',
   secondary: '#A5C8FF',
   tertiary: '#FFC86B',
-};
-
-const toRadians = (value) => (value * Math.PI) / 180;
-const haversineDistanceKm = (from, to) => {
-  if (!from || !to) {
-    return null;
-  }
-
-  const earthRadius = 6371;
-  const deltaLat = toRadians(to.lat - from.lat);
-  const deltaLng = toRadians(to.lng - from.lng);
-  const originLat = toRadians(from.lat);
-  const targetLat = toRadians(to.lat);
-
-  const a =
-    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(originLat) *
-      Math.cos(targetLat) *
-      Math.sin(deltaLng / 2) *
-      Math.sin(deltaLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return earthRadius * c;
 };
 
 const coverPalettes = [
@@ -110,6 +87,7 @@ export default function FavoritesScreen() {
     const next = await removeFavorite(parkId);
     setFavoriteIds(next);
     setFeedback('Local removido dos favoritos');
+    setTimeout(() => setFeedback(''), 3000);
   };
 
   const handleBack = () => {

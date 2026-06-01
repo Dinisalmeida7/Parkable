@@ -54,13 +54,13 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     const loadThemeMode = async () => {
       const storedMode = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-      setMode(storedMode === 'light' || storedMode === 'dark' ? storedMode : 'dark');
+      setMode(storedMode === 'light' || storedMode === 'dark' ? storedMode : systemScheme ?? 'dark');
     };
 
     loadThemeMode();
   }, []);
 
-  const scheme = mode || 'dark';
+  const scheme = mode || systemScheme || 'dark';
   const isDark = scheme === 'dark';
 
   const setColorMode = async (nextMode) => {

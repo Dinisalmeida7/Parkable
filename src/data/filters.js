@@ -1,6 +1,6 @@
-const toRadians = (value) => (value * Math.PI) / 180;
+export const toRadians = (value) => (value * Math.PI) / 180;
 
-const haversineDistanceKm = (from, to) => {
+export const haversineDistanceKm = (from, to) => {
   if (!from || !to) {
     return null;
   }

@@ -102,6 +102,7 @@ export default function SearchScreen() {
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
     setFilterFeedback('Filtros atualizados');
+    setTimeout(() => setFilterFeedback(''), 3000);
   };
 
   const toggleEquipment = (key) => {
@@ -109,6 +110,7 @@ export default function SearchScreen() {
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
     setFilterFeedback('Filtros atualizados');
+    setTimeout(() => setFilterFeedback(''), 3000);
   };
 
   const filtersPanResponder = useMemo(

@@ -15,33 +15,9 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import { applyParkFilters, getParkById, getParks } from '../data';
+import { applyParkFilters, getParkById, getParks, haversineDistanceKm } from '../data';
 import { useTheme } from '../theme';
 import { useTranslation } from '../i18n';
-
-const toRadians = (value) => (value * Math.PI) / 180;
-
-const haversineDistanceKm = (from, to) => {
-  if (!from || !to) {
-    return null;
-  }
-
-  const earthRadius = 6371;
-  const deltaLat = toRadians(to.lat - from.lat);
-  const deltaLng = toRadians(to.lng - from.lng);
-  const originLat = toRadians(from.lat);
-  const targetLat = toRadians(to.lat);
-
-  const a =
-    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(originLat) *
-      Math.cos(targetLat) *
-      Math.sin(deltaLng / 2) *
-      Math.sin(deltaLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return earthRadius * c;
-};
 
 const stripHtml = (value = '') => value.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 

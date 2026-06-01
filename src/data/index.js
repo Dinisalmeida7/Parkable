@@ -12,6 +12,7 @@ import { addHistoryEntry, clearHistory, getHistory, setHistory } from './history
 import {
   NEEDS,
   EQUIPMENT,
+  haversineDistanceKm,
   filterByNeeds,
   filterByEquipment,
   searchByName,
@@ -46,7 +47,7 @@ export const applyParkFilters = ({
   return result;
 };
 
-export { NEEDS, EQUIPMENT };
+export { NEEDS, EQUIPMENT, haversineDistanceKm };
 export {
   addFavorite,
   getFavorites,
