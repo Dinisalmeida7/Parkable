@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "parkable",
+    "slug": "parkable",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/brand-icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/brand-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Usamos a sua localizacao para ordenar parques por distancia."
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyAyfPbkG0kVudLTdhVa9RN2jwKV2S6FZqk"
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAyfPbkG0kVudLTdhVa9RN2jwKV2S6FZqk"
+        }
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/brand-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.parkable"
+    },
+    "web": {
+      "favicon": "./assets/brand-icon.png"
+    },
+    "extra": {
+      "googleDirectionsApiKey": "AIzaSyAAvwp36UybUmhyWdZg7MewkT6Pv-UEJkM"
+    },
+    "plugins": [
+      "expo-localization",
+      "expo-font"
+    ]
+  }
+}
